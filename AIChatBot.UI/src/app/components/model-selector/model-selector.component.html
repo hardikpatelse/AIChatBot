@@ -1,0 +1,21 @@
+<div class="relative w-full max-w-sm">
+    <label for="model-select" class="block mb-1 text-sm font-small">Select Model</label>
+
+    <select id="model-select" [(ngModel)]="selectedModelId" (change)="onModelChange()"
+        class="w-full p-2 pr-10 border rounded appearance-none form-control">
+        <option *ngFor="let model of models" [value]="model.id">
+            {{ model.name }} ({{ model.company }})
+        </option>
+    </select>
+
+    <div class="absolute top-[40px] left-0 w-full mt-1 border bg-white z-10 rounded shadow" *ngIf="showDetails">
+        <div *ngFor="let model of models" (click)="selectModel(model)"
+            class="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 cursor-pointer">
+            <img [src]="model.logoUrl" alt="{{model.name}}" class="w-6 h-6 object-contain" />
+            <div class="text-sm">
+                <div class="font-medium">{{ model.name }}</div>
+                <div class="text-xs text-gray-500">{{ model.company }}</div>
+            </div>
+        </div>
+    </div>
+</div>
