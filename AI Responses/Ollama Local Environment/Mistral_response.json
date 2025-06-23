@@ -1,0 +1,13 @@
+{"model":"mistral","created_at":"2025-06-21T17:02:18.996541496Z","response":" I","done":false}
+{"model":"mistral","created_at":"2025-06-21T17:02:21.788381351Z","response":" am","done":false}
+{"model":"mistral","created_at":"2025-06-21T17:02:23.251910202Z","response":" a","done":false}
+{"model":"mistral","created_at":"2025-06-21T17:02:24.294433612Z","response":" Large","done":false}
+{"model":"mistral","created_at":"2025-06-21T17:02:26.113025503Z","response":" Language","done":false}
+{"model":"mistral","created_at":"2025-06-21T17:02:27.563621112Z","response":" Model","done":false}
+{"model":"mistral","created_at":"2025-06-21T17:02:28.725558818Z","response":" trained","done":false}
+{"model":"mistral","created_at":"2025-06-21T17:02:29.95928065Z","response":" by","done":false}
+{"model":"mistral","created_at":"2025-06-21T17:02:31.371510199Z","response":" Mist","done":false}
+{"model":"mistral","created_at":"2025-06-21T17:02:32.842841286Z","response":"ral","done":false}
+{"model":"mistral","created_at":"2025-06-21T17:02:33.685232266Z","response":" AI","done":false}
+{"model":"mistral","created_at":"2025-06-21T17:02:34.525601876Z","response":".","done":false}
+{"model":"mistral","created_at":"2025-06-21T17:02:35.566606084Z","response":"","done":true,"done_reason":"stop","context":[3,29473,7294,1228,1136,29572,4,29473,1083,1605,1032,24060,16357,9639,11666,1254,25968,2418,16875,29491],"total_duration":94180984549,"load_duration":111652776,"prompt_eval_count":8,"prompt_eval_duration":77307673452,"eval_count":13,"eval_duration":16706155235}

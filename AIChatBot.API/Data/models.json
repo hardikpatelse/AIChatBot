@@ -1,0 +1,56 @@
+[
+  {
+    "id": "phi3",
+    "name": "Phi-3 Mini",
+    "company": "Microsoft",
+    "logoUrl": "assets/images/model-icons/phi.png",
+    "description": "Phi-3 is a family of lightweight 3B (Mini) and 14B (Medium) state-of-the-art open models by Microsoft.",
+    "referralSource": "Ollama",
+    "referenceLink": "https://ollama.com/library/phi3:latest"
+  },
+  {
+    "id": "llama3",
+    "name": "LLaMA 3",
+    "company": "Meta",
+    "logoUrl": "assets/images/model-icons/llama.png",
+    "description": "Meta Llama 3: The most capable openly available LLM to date.",
+    "referralSource": "Ollama",
+    "referenceLink": "https://ollama.com/library/llama3:latest"
+  },
+  {
+    "id": "mistral",
+    "name": "Mistral 7B",
+    "company": "Mistral AI",
+    "logoUrl": "assets/images/model-icons/mistralai.png",
+    "description": "The 7B model released by Mistral AI, updated to version 0.3.",
+    "referralSource": "Ollama",
+    "referenceLink": "https://ollama.com/library/mistral:latest"
+  },
+  {
+    "id": "gemma:2b",
+    "name": "Gemma",
+    "company": "Google",
+    "logoUrl": "assets/images/model-icons/gemma.png",
+    "description": "Gemma is a family of lightweight, state-of-the-art open models built by Google DeepMind. Updated to version 1.1.",
+    "referralSource": "Ollama",
+    "referenceLink": "https://ollama.com/library/gemma:2b"
+  },
+  {
+    "id": "deepseek/deepseek-chat-v3-0324:free",
+    "name": "DeepSeek v3",
+    "company": "DeepSeek",
+    "logoUrl": "assets/images/model-icons/deepseek.png",
+    "description": "DeepSeek V3, a 685B-parameter, mixture-of-experts model, is the latest iteration of the flagship chat model family from the DeepSeek team.\nIt succeeds the DeepSeek V3 model and performs really well on a variety of tasks.",
+    "referralSource": "OpenRouter",
+    "referenceLink": "https://openrouter.ai/deepseek/deepseek-chat-v3-0324:free"
+  },
+  {
+    "id": "google/gemma-3-27b-it:free",
+    "name": "Gemma 3 27B",
+    "company": "Google",
+    "logoUrl": "assets/images/model-icons/gemma.png",
+    "description": "Gemma 3 introduces multimodality, supporting vision-language input and text outputs. It handles context windows up to 128k tokens, understands over 140 languages, and offers improved math, reasoning, and chat capabilities, including structured outputs and function calling. Gemma 3 27B is Google's latest open source model, successor to Gemma 2.",
+    "referralSource": "OpenRouter",
+    "referenceLink": "https://openrouter.ai/google/gemma-3-27b-it:free"
+  }
+]

@@ -1,0 +1,20 @@
+{"model":"phi3","created_at":"2025-06-23T06:54:49.256228553Z","response":"I","done":false}
+{"model":"phi3","created_at":"2025-06-23T06:54:50.48255781Z","response":" am","done":false}
+{"model":"phi3","created_at":"2025-06-23T06:54:51.36222356Z","response":" Ph","done":false}
+{"model":"phi3","created_at":"2025-06-23T06:54:51.686196889Z","response":"i","done":false}
+{"model":"phi3","created_at":"2025-06-23T06:54:51.992866111Z","response":",","done":false}
+{"model":"phi3","created_at":"2025-06-23T06:54:52.391385136Z","response":" an","done":false}
+{"model":"phi3","created_at":"2025-06-23T06:54:52.642793142Z","response":" A","done":false}
+{"model":"phi3","created_at":"2025-06-23T06:54:52.918696683Z","response":"I","done":false}
+{"model":"phi3","created_at":"2025-06-23T06:54:53.173509787Z","response":" developed","done":false}
+{"model":"phi3","created_at":"2025-06-23T06:54:53.44359452Z","response":" by","done":false}
+{"model":"phi3","created_at":"2025-06-23T06:54:53.710040937Z","response":" Microsoft","done":false}
+{"model":"phi3","created_at":"2025-06-23T06:54:53.979268997Z","response":".","done":false}
+{"model":"phi3","created_at":"2025-06-23T06:54:54.257079304Z","response":" How","done":false}
+{"model":"phi3","created_at":"2025-06-23T06:54:54.506245515Z","response":" can","done":false}
+{"model":"phi3","created_at":"2025-06-23T06:54:54.774828218Z","response":" I","done":false}
+{"model":"phi3","created_at":"2025-06-23T06:54:55.176336103Z","response":" help","done":false}
+{"model":"phi3","created_at":"2025-06-23T06:54:55.458484289Z","response":" you","done":false}
+{"model":"phi3","created_at":"2025-06-23T06:54:55.686637348Z","response":" today","done":false}
+{"model":"phi3","created_at":"2025-06-23T06:54:55.9561458Z","response":"?","done":false}
+{"model":"phi3","created_at":"2025-06-23T06:54:56.267724313Z","response":"","done":true,"done_reason":"stop","context":[32010,29871,13,22110,526,366,29973,32007,29871,13,32001,29871,13,29902,626,1963,29875,29892,385,319,29902,8906,491,7783,29889,1128,508,306,1371,366,9826,29973],"total_duration":49290865781,"load_duration":31588322807,"prompt_eval_count":13,"prompt_eval_duration":10596544526,"eval_count":20,"eval_duration":7054524109}
