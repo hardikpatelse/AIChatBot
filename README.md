@@ -152,27 +152,6 @@ AIChatBot/
 ```
 
 ---
-
-## 🚀 Get Started
-
-1. Choose your preferred model type (local or online).
-2. Start the backend using `.NET 9`
-3. Start the frontend using Angular CLI
-4. Interact with AIChatBot at `http://localhost:4200/`
-
----
-
-## 💖 Contributing
-
-Pull requests and suggestions are welcome! Feel free to fork the repo and enhance it.
-
----
-
-## 📄 License
-
-This project is open-source and available under the [MIT License](LICENSE).
-
-
 ## 🧠 AI Tools & Agent Integration
 
 The AIChatBot supports two advanced operation modes beyond simple chat:
@@ -201,4 +180,25 @@ You can toggle between AI modes via the UI:
 - **Chat-Only Mode**
 - **AI + Tools Mode**
 - **Agent Mode** (multi-step planning, coming soon)
+
+---
+
+## 🚀 Get Started
+
+1. Choose your preferred model type (local or online).
+2. Start the backend using `.NET 9`
+3. Start the frontend using Angular CLI
+4. Interact with AIChatBot at `http://localhost:4200/`
+
+---
+
+## 💖 Contributing
+
+Pull requests and suggestions are welcome! Feel free to fork the repo and enhance it.
+
+---
+
+## 📄 License
+
+This project is open-source and available under the [MIT License](LICENSE).
 
