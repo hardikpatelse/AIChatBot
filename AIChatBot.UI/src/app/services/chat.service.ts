@@ -20,7 +20,7 @@ export class ChatService {
     return this.http.get<ChatHistoryResponse>(`${this.apiUrl}/chat/history?modelId=${modelId}`)
   }
 
-  sendMessage(model: string, message: string): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/chat`, { model, message })
+  sendMessage(model: string, message: string, aIMode: string): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/chat`, { model, message, aIMode })
   }
 }

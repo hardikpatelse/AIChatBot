@@ -1,0 +1,12 @@
+<div class="chat-mode-selector">
+    <div class="mb-2 fw-semibold">How would you like the AI to assist you today?</div>
+    <div class="d-flex flex-column gap-2">
+        <button *ngFor="let option of options"
+            class="btn btn-outline-primary d-flex align-items-center justify-content-start"
+            [ngClass]="{'active': selectedMode === option.value}" (click)="selectMode(option.value)">
+            <span class="me-2 fs-5">{{ option.icon }}</span>
+            <span class="fw-bold">{{ option.label }}</span>
+            <span class="text-muted small ms-2 fst-italic">[{{ option.description }}]</span>
+        </button>
+    </div>
+</div>

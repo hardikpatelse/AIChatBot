@@ -5,6 +5,7 @@ import { RouterModule, Routes } from '@angular/router'
 import { Chat } from './chat.component'
 import { TypingIndicatorModule } from '../typing-indicator/typing-indicator.module'
 import { ModelSelectorModule } from '../model-selector/model-selector.module'
+import { ChatModeSelectorModule } from '../chat-mode-selector/chat-mode-selector.module'
 
 const routes: Routes = [
     { path: '', component: Chat }
@@ -17,9 +18,10 @@ const routes: Routes = [
     imports: [
         CommonModule,
         FormsModule,
+        RouterModule.forChild(routes),
         TypingIndicatorModule,
         ModelSelectorModule,
-        RouterModule.forChild(routes)
+        ChatModeSelectorModule
     ]
 })
 export class ChatModule { }

@@ -19,6 +19,7 @@ builder.Services.AddSingleton<RetryFileOperationService>();
 
 builder.Services.AddHttpClient<OllamaChatService>();
 builder.Services.AddHttpClient<OpenRouterChatService>();
+builder.Services.AddScoped<AgentService>();
 
 builder.Services.Configure<OpenRouterModelsApi>(builder.Configuration.GetSection("OpenRouterModelsApi"));
 builder.Services.Configure<OllamaModelsApi>(builder.Configuration.GetSection("OllamaModelsApi"));

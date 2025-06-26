@@ -18,6 +18,7 @@ export class Chat implements OnInit, AfterViewInit {
   userMessage: string = '';
   isLoading: boolean = false;
   errorMessage: string = '';
+  selectedChatMode: string = 'chat';
 
   @ViewChild('chatHistoryContainer') chatHistoryContainer!: ElementRef
 
@@ -83,7 +84,7 @@ export class Chat implements OnInit, AfterViewInit {
     this.errorMessage = ''
     this.cdr.detectChanges()
     setTimeout(() => this.scrollToBottom(), 0)
-    this.chatService.sendMessage(this.selectedModelId, msg).subscribe({
+    this.chatService.sendMessage(this.selectedModelId, msg, this.selectedChatMode).subscribe({
       next: res => {
         this.chatHistory.push({ role: 'assistant', content: res.response, dateTime: new Date().toISOString() })
         this.isLoading = false
@@ -99,5 +100,10 @@ export class Chat implements OnInit, AfterViewInit {
 
   parseMarkdown(content: string): any {
     return marked.parse(content)
+  }
+
+  onModeSelected(mode: string): void {
+    this.selectedChatMode = mode
+    // You can add additional logic here if needed
   }
 }
