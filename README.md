@@ -172,3 +172,33 @@ Pull requests and suggestions are welcome! Feel free to fork the repo and enhanc
 
 This project is open-source and available under the [MIT License](LICENSE).
 
+
+## 🧠 AI Tools & Agent Integration
+
+The AIChatBot supports two advanced operation modes beyond simple chat:
+
+### 1. 🛠️ Tool-Enabled AI
+In this mode, the AI can recognize specific tasks in user prompts and use internal tools (functions) to perform actions. Integrated tools include:
+
+| Tool Function    | Description                                  | Example Prompt                                                   |
+|------------------|----------------------------------------------|------------------------------------------------------------------|
+| `CreateFile`     | Creates a text file with given content       | "Create a file called `report.txt` with the text `Hello world`." |
+| `FetchWebData`   | Fetches the HTML/content of a public URL     | "Fetch the content of https://example.com"                       |
+| `SendEmail`      | Simulates sending an email (console-logged)  | "Send an email to john@example.com with subject `Hello`."        |
+
+These functions are executed server-side in `.NET`, with input parsed from natural language prompts.
+
+
+### 2. 🤖 AI Agent Mode (Planning + Action)
+The AI agent is capable of:
+- Understanding high-level tasks
+- Selecting and invoking appropriate tools
+- Providing intelligent responses based on the outcome
+
+This is powered by an `AgentService` that works with both **local LLMs** (via Ollama) and **cloud models** (via OpenRouter) to determine the right function to execute and handle the response.
+
+You can toggle between AI modes via the UI:
+- **Chat-Only Mode**
+- **AI + Tools Mode**
+- **Agent Mode** (multi-step planning, coming soon)
+
