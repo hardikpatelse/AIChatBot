@@ -4,6 +4,14 @@ AIChatBot is a local and online AI-powered chatbot built using open-source langu
 
 ---
 
+## 🎬 Demo Video
+
+Watch the AIChatBot in action on YouTube:  
+📺 [AIChatBot Demo](https://youtu.be/ReTiWZABiD8)
+
+---
+
+
 ## 🛠️ Prerequisites
 
 To run this project locally, ensure the following:
