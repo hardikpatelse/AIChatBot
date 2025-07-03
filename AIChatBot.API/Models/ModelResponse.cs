@@ -9,5 +9,6 @@ namespace AIChatBot.API.Models
         public string Description { get; set; }
         public string ReferenceLink { get; set; }
         public string ReferralSource { get; set; }
+        public List<string> SupportedModes { get; set; }
     }
 }

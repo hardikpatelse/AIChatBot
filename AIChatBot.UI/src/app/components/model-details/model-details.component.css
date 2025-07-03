@@ -1,0 +1,21 @@
+.card-title {
+    font-weight: 600;
+}
+
+.card-subtitle {
+    font-style: italic;
+}
+
+.card-link {
+    font-size: 0.95em;
+}
+
+.img-fluid {
+    border-radius: 8px;
+    background: #f8f9fa;
+}
+
+.model-details-scroll {
+    max-height: calc(100vh - 415px);
+    overflow-y: auto;
+}

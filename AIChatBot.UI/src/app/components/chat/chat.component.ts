@@ -3,6 +3,7 @@ import { ChatService } from '../../services/chat.service'
 import { Model } from '../../entities/model'
 import { ChatHistoryResponse, ChatMessage } from '../../entities/chat-history'
 import { marked } from 'marked'
+import { ORCall } from '../../services/orcall.service'
 
 @Component({
   selector: 'app-chat',
@@ -10,7 +11,7 @@ import { marked } from 'marked'
   templateUrl: './chat.component.html',
   styleUrl: './chat.component.css'
 })
-export class Chat implements OnInit, AfterViewInit {
+export class Chat implements OnInit {
   models: Model[] = [];
   selectedModelId: string = '';
   selectedModelDetails: Model | null = null;
@@ -20,9 +21,7 @@ export class Chat implements OnInit, AfterViewInit {
   errorMessage: string = '';
   selectedChatMode: string = 'chat';
 
-  @ViewChild('chatHistoryContainer') chatHistoryContainer!: ElementRef
-
-  constructor(private chatService: ChatService, private cdr: ChangeDetectorRef) { }
+  constructor(private chatService: ChatService, private cdr: ChangeDetectorRef, private orCall: ORCall) { }
 
   ngOnInit(): void {
     this.chatService.getModels().subscribe({
@@ -35,24 +34,7 @@ export class Chat implements OnInit, AfterViewInit {
     })
   }
 
-  ngAfterViewInit(): void {
-    // Use MutationObserver to watch for changes in chatHistoryContainer
-    if (this.chatHistoryContainer) {
-      const observer = new MutationObserver(() => {
-        this.scrollToBottom()
-      })
-      observer.observe(this.chatHistoryContainer.nativeElement, { childList: true, subtree: true })
-    }
-    this.scrollToBottom()
-  }
 
-  private scrollToBottom(): void {
-    if (this.chatHistoryContainer) {
-      setTimeout(() => {
-        this.chatHistoryContainer.nativeElement.scrollTop = this.chatHistoryContainer.nativeElement.scrollHeight
-      })
-    }
-  }
 
   onModelChange(modelId: string): void {
     this.selectedModelId = modelId
@@ -66,7 +48,6 @@ export class Chat implements OnInit, AfterViewInit {
         this.chatHistory = modelHistory.history || []
         this.errorMessage = ''
         this.cdr.detectChanges()
-        setTimeout(() => this.scrollToBottom(), 0) // Ensure DOM is updated before scrolling
       },
       error: () => {
         this.errorMessage = 'Failed to load chat history.'
@@ -83,13 +64,11 @@ export class Chat implements OnInit, AfterViewInit {
     this.isLoading = true
     this.errorMessage = ''
     this.cdr.detectChanges()
-    setTimeout(() => this.scrollToBottom(), 0)
     this.chatService.sendMessage(this.selectedModelId, msg, this.selectedChatMode).subscribe({
       next: res => {
         this.chatHistory.push({ role: 'assistant', content: res.response, dateTime: new Date().toISOString() })
         this.isLoading = false
         this.cdr.detectChanges()
-        setTimeout(() => this.scrollToBottom(), 0)
       },
       error: () => {
         this.errorMessage = 'Failed to send message to server.'

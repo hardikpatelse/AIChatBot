@@ -6,7 +6,8 @@
     "logoUrl": "assets/images/model-icons/phi.png",
     "description": "Phi-3 is a family of lightweight 3B (Mini) and 14B (Medium) state-of-the-art open models by Microsoft.",
     "referralSource": "Ollama",
-    "referenceLink": "https://ollama.com/library/phi3:latest"
+    "referenceLink": "https://ollama.com/library/phi3:latest",
+    "supportedModes": [ "chat", "tools" ]
   },
   {
     "id": "llama3",
@@ -15,7 +16,8 @@
     "logoUrl": "assets/images/model-icons/llama.png",
     "description": "Meta Llama 3: The most capable openly available LLM to date.",
     "referralSource": "Ollama",
-    "referenceLink": "https://ollama.com/library/llama3:latest"
+    "referenceLink": "https://ollama.com/library/llama3:latest",
+    "supportedModes": [ "chat", "tools" ]
   },
   {
     "id": "mistral",
@@ -24,7 +26,8 @@
     "logoUrl": "assets/images/model-icons/mistralai.png",
     "description": "The 7B model released by Mistral AI, updated to version 0.3.",
     "referralSource": "Ollama",
-    "referenceLink": "https://ollama.com/library/mistral:latest"
+    "referenceLink": "https://ollama.com/library/mistral:latest",
+    "supportedModes": [ "chat", "tools" ]
   },
   {
     "id": "gemma:2b",
@@ -33,7 +36,8 @@
     "logoUrl": "assets/images/model-icons/gemma.png",
     "description": "Gemma is a family of lightweight, state-of-the-art open models built by Google DeepMind. Updated to version 1.1.",
     "referralSource": "Ollama",
-    "referenceLink": "https://ollama.com/library/gemma:2b"
+    "referenceLink": "https://ollama.com/library/gemma:2b",
+    "supportedModes": [ "chat", "tools" ]
   },
   {
     "id": "deepseek/deepseek-chat-v3-0324:free",
@@ -42,7 +46,8 @@
     "logoUrl": "assets/images/model-icons/deepseek.png",
     "description": "DeepSeek V3, a 685B-parameter, mixture-of-experts model, is the latest iteration of the flagship chat model family from the DeepSeek team.\nIt succeeds the DeepSeek V3 model and performs really well on a variety of tasks.",
     "referralSource": "OpenRouter",
-    "referenceLink": "https://openrouter.ai/deepseek/deepseek-chat-v3-0324:free"
+    "referenceLink": "https://openrouter.ai/deepseek/deepseek-chat-v3-0324:free",
+    "supportedModes": [ "chat", "tools" ]
   },
   {
     "id": "google/gemma-3-27b-it:free",
@@ -51,6 +56,37 @@
     "logoUrl": "assets/images/model-icons/gemma.png",
     "description": "Gemma 3 introduces multimodality, supporting vision-language input and text outputs. It handles context windows up to 128k tokens, understands over 140 languages, and offers improved math, reasoning, and chat capabilities, including structured outputs and function calling. Gemma 3 27B is Google's latest open source model, successor to Gemma 2.",
     "referralSource": "OpenRouter",
-    "referenceLink": "https://openrouter.ai/google/gemma-3-27b-it:free"
+    "referenceLink": "https://openrouter.ai/google/gemma-3-27b-it:free",
+    "supportedModes": [ "chat", "tools" ]
+  },
+  {
+    "id": "google/gemini-2.0-flash-exp:free",
+    "name": "Gemini Flash 2.0 - Limited",
+    "company": "Google",
+    "logoUrl": "assets/images/model-icons/gemini.png",
+    "description": "Gemini Flash 2.0 offers a significantly faster time to first token (TTFT) compared to Gemini Flash 1.5, while maintaining quality on par with larger models like Gemini Pro 1.5. It introduces notable enhancements in multimodal understanding, coding capabilities, complex instruction following, and function calling. These advancements come together to deliver more seamless and robust agentic experiences.",
+    "referralSource": "OpenRouter",
+    "referenceLink": "https://openrouter.ai/google/gemini-2.0-flash-exp:free",
+    "supportedModes": [ "chat", "tools" ]
+  },
+  {
+    "id": "openai/gpt-3.5-turbo-0613",
+    "name": "GPT-3.5 Turbo",
+    "company": "OpenAI",
+    "logoUrl": "assets/images/model-icons/chatgpt.png",
+    "description": "GPT-3.5 Turbo is OpenAI's fastest model. It can understand and generate natural language or code, and is optimized for chat and traditional completion tasks.",
+    "referralSource": "OpenRouter",
+    "referenceLink": "https://openrouter.ai/openai/gpt-3.5-turbo-0613",
+    "supportedModes": [ "chat", "tools", "agent" ]
+  },
+  {
+    "id": "google/gemini-2.0-flash-001",
+    "name": "Gemini Flash 2.0 - Unlimited",
+    "company": "Google",
+    "logoUrl": "assets/images/model-icons/gemini.png",
+    "description": "Gemini Flash 2.0 offers a significantly faster time to first token (TTFT) compared to Gemini Flash 1.5, while maintaining quality on par with larger models like Gemini Pro 1.5. It introduces notable enhancements in multimodal understanding, coding capabilities, complex instruction following, and function calling. These advancements come together to deliver more seamless and robust agentic experiences.",
+    "referralSource": "OpenRouter",
+    "referenceLink": "https://openrouter.ai/google/gemini-2.0-flash-001",
+    "supportedModes": [ "chat", "tools", "agent" ]
   }
 ]

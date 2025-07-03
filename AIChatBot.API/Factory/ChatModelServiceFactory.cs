@@ -22,6 +22,9 @@ namespace AIChatBot.API.Factory
                 "mistral" => _provider.GetRequiredService<OllamaChatService>(),
                 "deepseek/deepseek-chat-v3-0324:free" => _provider.GetRequiredService<OpenRouterChatService>(),
                 "google/gemma-3-27b-it:free" => _provider.GetRequiredService<OpenRouterChatService>(),
+                "google/gemini-2.0-flash-exp:free" => _provider.GetRequiredService<OpenRouterChatService>(),
+                "openai/gpt-3.5-turbo-0613" => _provider.GetRequiredService<OpenRouterChatService>(),
+                "google/gemini-2.0-flash-001" => _provider.GetRequiredService<OpenRouterChatService>(),
                 _ => throw new NotSupportedException($"Model '{modelName}' is not supported.")
             };
         }

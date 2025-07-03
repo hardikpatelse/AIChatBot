@@ -1,5 +1,3 @@
-using System;
-
 namespace AIChatBot.API.Models
 {
     public class ChatMessage

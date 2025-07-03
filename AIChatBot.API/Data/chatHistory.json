@@ -104,13 +104,38 @@
       },
       {
         "Role": "user",
-        "Content": "Create a file named as \u0022Essay on Monsoon.txt\u0022 and write the content by yourself. Write the essay on monsoon season having at-least 150 characters.",
-        "DateTime": "2025-06-26T14:13:23.1276798Z"
+        "Content": "Write a Python code to get a random number between 1 to 100",
+        "DateTime": "2025-06-28T14:35:44.4226597Z"
       },
       {
         "Role": "assistant",
-        "Content": "\u2705 File \u0027Essay on Monsoon.txt\u0027 created.",
-        "DateTime": "2025-06-26T14:13:56.0385569Z"
+        "Content": "# Python Code to Generate a Random Number Between 1 and 100\n\n\u0060\u0060\u0060python\nimport random\n\n# Generate a random number between 1 and 100 (inclusive)\nrandom_number = random.randint(1, 100)\n\nprint(f\u0022Random number between 1 and 100: {random_number}\u0022)\n\u0060\u0060\u0060\n\n### Explanation:\n1. \u0060import random\u0060 - Imports Python\u0027s built-in random module\n2. \u0060random.randint(1, 100)\u0060 - Generates a random integer between 1 and 100 (inclusive of both endpoints)\n\n### Alternative Approach:\n\u0060\u0060\u0060python\nimport random\n\n# Using random.randrange (exclusive of the upper bound)\nrandom_number = random.randrange(1, 101)\n\nprint(f\u0022Random number between 1 and 100: {random_number}\u0022)\n\u0060\u0060\u0060\n\nBoth methods will give you a random integer in the specified range. The first method (\u0060randint\u0060) is more commonly used for this purpose.",
+        "DateTime": "2025-06-28T14:36:07.6030448Z"
+      },
+      {
+        "Role": "user",
+        "Content": "Create a file named as \u0027PrimeNumber.py\u0027 having a content of a program to check if a number is prime.",
+        "DateTime": "2025-06-28T14:36:51.5236948Z"
+      },
+      {
+        "Role": "assistant",
+        "Content": "\u2705 File \u0027PrimeNumber.py\u0027 created.",
+        "DateTime": "2025-06-28T14:36:56.8597114Z"
+      },
+      {
+        "Role": "user",
+        "Content": "Send a file to John.",
+        "DateTime": "2025-06-29T07:32:05.8089331Z"
+      },
+      {
+        "Role": "user",
+        "Content": "Send a file to John.",
+        "DateTime": "2025-06-29T07:38:26.6272225Z"
+      },
+      {
+        "Role": "user",
+        "Content": "Create a file named as \u0027PrimeNumber.py\u0027 having a content of a program to check if a number is prime.",
+        "DateTime": "2025-06-29T07:42:24.4334153Z"
       }
     ]
   },
@@ -120,17 +145,107 @@
       {
         "Role": "user",
         "Content": "Who are you?",
-        "DateTime": "2025-06-23T09:19:58.4238781Z"
-      },
-      {
-        "Role": "user",
-        "Content": "Who are you?",
         "DateTime": "2025-06-23T09:20:44.8638975Z"
       },
       {
         "Role": "assistant",
         "Content": "Hi there! \uD83D\uDC4B I\u0027m Gemma, an open-weights AI assistant. I\u0027m a large language model trained by Google DeepMind. The Gemma team are my creators. \n\nI\u0027m widely available to the public \u2013 I\u0027m an *open weights* model, which means I\u0027m pretty accessible! I take text *and* images as inputs and generate text as output. Basically, you can give me a prompt (text or an image!), and I\u0027ll do my best to give you a helpful and informative response.\n\nI don\u0027t have access to tools, real-time information or Google search.\n\nYou can find more information about me here: [https://ai.google.dev/gemma](https://ai.google.dev/gemma)\n\n\n\n",
         "DateTime": "2025-06-23T09:20:55.4413292Z"
+      },
+      {
+        "Role": "user",
+        "Content": "What is your strength?",
+        "DateTime": "2025-06-28T10:15:19.0316413Z"
+      },
+      {
+        "Role": "assistant",
+        "Content": "I\u0027m Gemma, a large language model created by the Gemma team at Google DeepMind. As an *open-weights* model, I\u0027m widely available to the public! \n\nI take text *and* images as inputs and generate text as output. Basically, I\u0027m pretty good at understanding and creating human-like text based on what I\u0027ve been trained on. \n\nHere\u0027s a bit more specifically what I can do:\n\n*   **Understand complex ideas:** I can grasp nuances and subtleties in language.\n*   **Generate different kinds of text:** I can write stories, articles, code, and more.\n*   **Translate languages:** I can convert text from one language to another.\n*   **Answer your questions:** I can provide informative and comprehensive answers.\n\n\n\nI\u0027m still under development, but I\u0027m learning new things every day!\n\nYou can find more information about me here: [https://ai.google.dev/gemma](https://ai.google.dev/gemma)",
+        "DateTime": "2025-06-28T10:15:26.8226673Z"
+      },
+      {
+        "Role": "user",
+        "Content": "Convert this SQL query to MongoDB format: SELECT * FROM users WHERE age \u003E 30",
+        "DateTime": "2025-06-28T14:39:21.6054292Z"
+      },
+      {
+        "Role": "assistant",
+        "Content": "\u0060\u0060\u0060javascript\ndb.users.find({ age: { $gt: 30 } })\n\u0060\u0060\u0060\n\n**Explanation:**\n\n* **\u0060db.users\u0060**:  This specifies the collection you\u0027re querying, equivalent to the \u0060users\u0060 table in SQL.\n* **\u0060find()\u0060**: This is the MongoDB method for retrieving documents (similar to \u0060SELECT\u0060 in SQL).\n* **\u0060{ age: { $gt: 30 } }\u0060**: This is the query filter.  It\u0027s a JavaScript object that defines the criteria for selecting documents.\n    * **\u0060age\u0060**:  The field you\u0027re filtering on.\n    * **\u0060$gt\u0060**:  This is a MongoDB comparison operator meaning \u0022greater than\u0022.  It\u0027s equivalent to \u0060\u003E\u0060 in SQL.\n    * **\u006030\u0060**: The value you\u0027re comparing against.\n\n**In summary:**\n\nThis MongoDB query finds all documents in the \u0060users\u0060 collection where the \u0060age\u0060 field is greater than 30.  It\u0027s the direct equivalent of the SQL query \u0060SELECT * FROM users WHERE age \u003E 30\u0060.\n",
+        "DateTime": "2025-06-28T14:39:33.1201923Z"
+      },
+      {
+        "Role": "user",
+        "Content": "Create a file named as \u0027recursion.py\u0027 having a content of a program which explain the concept of recursion.",
+        "DateTime": "2025-06-28T14:39:59.7125368Z"
+      },
+      {
+        "Role": "assistant",
+        "Content": "\u2705 File \u0027recursion.py\u0027 created.",
+        "DateTime": "2025-06-28T14:40:11.112118Z"
+      },
+      {
+        "Role": "user",
+        "Content": "hello",
+        "DateTime": "2025-06-29T07:50:48.5208548Z"
+      },
+      {
+        "Role": "assistant",
+        "Content": "\nHello there! \uD83D\uDC4B \n\nIt\u0027s great to connect with you. How can I help you today? \n\nJust let me know what you\u0027re thinking, whether it\u0027s:\n\n* **You want to chat:** We can just talk about anything!\n* **You have a question:** I can try my best to answer it.\n* **You need help with something:**  Like writing, brainstorming, translating, summarizing, etc.\n* **You just want to test me out:** That\u0027s fine too!\n\n\n\nI\u0027m here and ready to assist. \uD83D\uDE0A",
+        "DateTime": "2025-06-29T07:50:55.9643508Z"
+      },
+      {
+        "Role": "user",
+        "Content": "Create a file named \u0027ShuffleDeckOfCards_ByTools.py\u0027 with a Python program to shuffle a Deck of Cards.",
+        "DateTime": "2025-07-02T17:09:05.0698497Z"
+      },
+      {
+        "Role": "assistant",
+        "Content": "\u2705 File \u0027ShuffleDeckOfCards_ByTools.py\u0027 created.",
+        "DateTime": "2025-07-02T17:09:33.3161164Z"
+      }
+    ]
+  },
+  {
+    "ModelId": "google/gemini-2.0-flash-exp:free",
+    "History": [
+      {
+        "Role": "user",
+        "Content": "who are you?",
+        "DateTime": "2025-06-28T10:06:56.2648444Z"
+      },
+      {
+        "Role": "assistant",
+        "Content": "I am a large language model, trained by Google.\n",
+        "DateTime": "2025-06-28T10:07:01.1429639Z"
+      }
+    ]
+  },
+  {
+    "ModelId": "openai/gpt-3.5-turbo-0613",
+    "History": [
+      {
+        "Role": "user",
+        "Content": "Create a file named as \u0027LeapYear.py\u0027 having a content of a python program to Check Leap Year.",
+        "DateTime": "2025-07-02T16:29:31.4614476Z"
+      },
+      {
+        "Role": "assistant",
+        "Content": "\u2705 Tool \u0060CreateFile\u0060 executed:\n\u2705 File \u0027LeapYear.py\u0027 created.",
+        "DateTime": "2025-07-02T16:29:34.704133Z"
+      }
+    ]
+  },
+  {
+    "ModelId": "google/gemini-2.0-flash-001",
+    "History": [
+      {
+        "Role": "user",
+        "Content": "Create a file named \u0027ShuffleDeckOfCards.py\u0027 with a Python program to shuffle a Deck of Cards.",
+        "DateTime": "2025-07-02T16:34:21.7382239Z"
+      },
+      {
+        "Role": "assistant",
+        "Content": "\u2705 Tool \u0060CreateFile\u0060 executed:\n\u2705 File \u0027ShuffleDeckOfCards.py\u0027 created.",
+        "DateTime": "2025-07-02T16:34:28.8944516Z"
       }
     ]
   }

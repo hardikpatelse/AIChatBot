@@ -6,4 +6,5 @@ export interface Model {
     description?: string
     referralSource?: string
     referenceLink?: string
+    supportedModes: string[]
 }
