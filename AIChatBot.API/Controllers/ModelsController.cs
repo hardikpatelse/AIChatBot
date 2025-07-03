@@ -25,7 +25,7 @@ namespace AIChatBot.API.Controllers
                 var models = JsonSerializer.Deserialize<List<ModelResponse>>(
                     System.IO.File.ReadAllText("Data/models.json"), options);
                 return Ok(models);
-            }, this);
+            });
         }
     }
 }

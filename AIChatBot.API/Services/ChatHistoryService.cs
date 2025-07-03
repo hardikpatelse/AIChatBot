@@ -9,11 +9,9 @@ namespace AIChatBot.API.Services
     public class ChatHistoryService
     {
         private readonly string _chatHistoryPath = "Data/chatHistory.json";
-        private readonly RetryFileOperationService _retryService;
 
-        public ChatHistoryService(RetryFileOperationService retryService)
+        public ChatHistoryService()
         {
-            _retryService = retryService;
         }
 
         public ModelChatHistory GetHistory(string modelId)
@@ -65,7 +63,7 @@ namespace AIChatBot.API.Services
                 }
                 catch when (retries > 0)
                 {
-                    System.Threading.Thread.Sleep(200);
+                    Thread.Sleep(200);
                 }
             }
         }

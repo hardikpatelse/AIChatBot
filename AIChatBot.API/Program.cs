@@ -1,5 +1,6 @@
 using AIChatBot.API.AIServices;
 using AIChatBot.API.Factory;
+using AIChatBot.API.Interfaces;
 using AIChatBot.API.Models;
 using AIChatBot.API.Services;
 using Microsoft.OpenApi.Models; // Ensure this directive is present for Swagger support  
@@ -20,6 +21,8 @@ builder.Services.AddSingleton<RetryFileOperationService>();
 builder.Services.AddHttpClient<OllamaChatService>();
 builder.Services.AddHttpClient<OpenRouterChatService>();
 builder.Services.AddScoped<AgentService>();
+builder.Services.AddScoped<ToolsRegistryService>();
+builder.Services.AddScoped<IChatService, ChatService>();
 
 builder.Services.Configure<OpenRouterModelsApi>(builder.Configuration.GetSection("OpenRouterModelsApi"));
 builder.Services.Configure<OllamaModelsApi>(builder.Configuration.GetSection("OllamaModelsApi"));

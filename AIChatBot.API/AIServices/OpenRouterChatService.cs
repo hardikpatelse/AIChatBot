@@ -1,6 +1,9 @@
 ﻿using AIChatBot.API.Interfaces;
 using AIChatBot.API.Models;
+using AIChatBot.API.Models.Tools_Structure;
+using AIChatBot.API.Services;
 using Microsoft.Extensions.Options;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 
@@ -49,7 +52,7 @@ namespace AIChatBot.API.AIServices
                     Content = requestContent
                 };
 
-                request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _configurations.ApiKey);
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _configurations.ApiKey);
 
                 _httpClient.Timeout = TimeSpan.FromMinutes(5);
 
@@ -65,6 +68,46 @@ namespace AIChatBot.API.AIServices
                 _logger.LogError(ex, "Error occurred in OpenRouterChatService.SendMessageAsync");
                 throw;
             }
+        }
+
+        public async Task<List<FunctionCallResult>> ChatWithFunctionSupportAsync(string model, string userMessage, List<ToolDefinition> tools)
+        {
+            var functionCallResults = new List<FunctionCallResult>();
+            try
+            {
+                var apiKey = _configurations.ApiKey;
+
+                var requestBody = new
+                {
+                    model = model,
+                    messages = new[]
+                    {
+                        new
+                        {
+                            role = "user",
+                            content = userMessage
+                        }
+                    },
+                    tools = tools,
+                    tool_choice = "auto" // Let the model decide
+                };
+
+                var request = new HttpRequestMessage(HttpMethod.Post, _configurations.Url);
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
+                request.Content = new StringContent(JsonSerializer.Serialize(requestBody), Encoding.UTF8, "application/json");
+
+                var response = await _httpClient.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+
+                functionCallResults = FunctionCallResultParser.ParseFunctionCallResults(json);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred in OpenRouterChatService.ChatWithFunctionSupportAsync");
+                throw;
+            }
+
+            return functionCallResults;
         }
 
         private string ConvertDeepseekResponse(string modelResponse)

@@ -1,6 +1,5 @@
-using AIChatBot.API.Factory;
+using AIChatBot.API.Interfaces;
 using AIChatBot.API.Models;
-using AIChatBot.API.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AIChatBot.API.Controllers
@@ -9,72 +8,23 @@ namespace AIChatBot.API.Controllers
     [Route("[controller]")]
     public class ChatController : ControllerBase
     {
-        private readonly RetryFileOperationService _retryService;
-        private readonly ChatModelServiceFactory _factory;
-        private readonly ChatHistoryService _chatHistoryService;
-        private readonly AgentService _agentService;
+        private readonly IChatService _chatService;
 
-        public ChatController(
-            RetryFileOperationService retryService,
-            ChatModelServiceFactory factory,
-            ChatHistoryService chatHistoryService,
-            AgentService agentService)
+        public ChatController(IChatService chatService)
         {
-            _retryService = retryService;
-            _factory = factory;
-            _chatHistoryService = chatHistoryService;
-            _agentService = agentService;
+            _chatService = chatService;
         }
 
         [HttpGet("history")]
         public IActionResult GetHistory([FromQuery] string modelId)
         {
-            return _retryService.RetryFileOperation(() =>
-            {
-                var modelHistory = _chatHistoryService.GetHistory(modelId);
-                return Ok(modelHistory);
-            }, this);
+            return _chatService.GetHistory(modelId);
         }
 
         [HttpPost]
         public async Task<IActionResult> PostChat([FromBody] ChatRequest request)
         {
-            var messages = new List<ChatMessage>
-            {
-                new ChatMessage
-                {
-                    Role = "user",
-                    Content = request.Message,
-                    DateTime = DateTime.UtcNow
-                }
-            };
-
-            _chatHistoryService.SaveHistory(request.Model, messages);
-
-            string responseText;
-            
-            if (request.AIMode == "tools")
-            {
-                responseText = await _agentService.RunAgentAsync(request.Model, request.Message);
-            }
-            else
-            {
-                var service = _factory.GetService(request.Model);
-                responseText = await service.SendMessageAsync(request.Model, request.Message);
-            }
-
-            messages = new List<ChatMessage>
-            {
-                new ChatMessage
-                {
-                    Role = "assistant",
-                    Content = responseText,
-                    DateTime = DateTime.UtcNow
-                }
-            };
-
-            _chatHistoryService.SaveHistory(request.Model, messages);
-            return Ok(new ChatResponse { Response = responseText });
+            return await _chatService.PostChat(request);
         }
     }
 }

@@ -1,51 +1,43 @@
-﻿using AIChatBot.API.AIServices;
-using System.Text.RegularExpressions;
+﻿using AIChatBot.API.Factory;
+using AIChatBot.API.Models;
 using System.Text.Json;
 
 namespace AIChatBot.API.Services
 {
     public class AgentService
     {
-        private readonly OpenRouterChatService _model;
+        private readonly ChatModelServiceFactory _factory;
 
-        public AgentService(OpenRouterChatService model)
+        public AgentService(ChatModelServiceFactory factory)
         {
-            _model = model;
+            _factory = factory;
         }
 
-        public async Task<string> RunAgentAsync(string model, string userInput)
+        public async Task<string> RunToolAsync(string aiResponse)
         {
-            // Construct prompt with tools
-            var toolList = "Tools: CreateFile, FetchWebData, SendEmail\n";
-            var systemPrompt = $"{toolList}\nUnderstand user's intent and call one tool. Provide me the response in json string. Do not include any code expressions.";
-
-            var fullPrompt = $"{systemPrompt}\nUser: {userInput}";
-
-            var response = await _model.SendMessageAsync(model, fullPrompt);
-
             // Remove code block formatting if present (e.g., ```json ... ```)
-            response = response.Trim();
-            if (response.StartsWith("```"))
+            aiResponse = aiResponse.Trim();
+            if (aiResponse.StartsWith("```"))
             {
-                var firstNewline = response.IndexOf('\n');
+                var firstNewline = aiResponse.IndexOf('\n');
                 if (firstNewline != -1)
                 {
                     // Remove the opening ```
-                    response = response.Substring(firstNewline + 1);
+                    aiResponse = aiResponse.Substring(firstNewline + 1);
                     // Remove the closing ```
-                    var lastCodeBlock = response.LastIndexOf("```", StringComparison.Ordinal);
+                    var lastCodeBlock = aiResponse.LastIndexOf("```", StringComparison.Ordinal);
                     if (lastCodeBlock != -1)
                     {
-                        response = response.Substring(0, lastCodeBlock);
+                        aiResponse = aiResponse.Substring(0, lastCodeBlock);
                     }
                 }
-                response = response.Trim();
+                aiResponse = aiResponse.Trim();
             }
 
             // Try to parse JSON response
             try
             {
-                using var doc = JsonDocument.Parse(response);
+                using var doc = JsonDocument.Parse(aiResponse);
                 var root = doc.RootElement;
 
                 if (root.TryGetProperty("tool", out var toolElement) &&
@@ -95,6 +87,51 @@ namespace AIChatBot.API.Services
 
             return "🤖 No matching tool found.";
         }
+
+        public async Task<string> RunAgentAsync(List<FunctionCallResult> functionCallResults)
+        {
+            var result = "";
+
+            foreach (var functionCall in functionCallResults)
+            {
+                if (!string.IsNullOrEmpty(functionCall.FunctionName) && !string.IsNullOrEmpty(functionCall.ArgumentsJson))
+                {
+                    try
+                    {
+                        var args = JsonDocument.Parse(functionCall.ArgumentsJson).RootElement;
+                        if (ToolMap.TryGetValue(functionCall.FunctionName, out var func))
+                        {
+                            var toolResult = func(args);
+                            return $"✅ Tool `{functionCall.FunctionName}` executed:\n{toolResult}";
+                        }
+                        return $"❌ Unknown tool: {functionCall.FunctionName}";
+                    }
+                    catch (Exception ex)
+                    {
+                        return $"❌ Error executing tool `{functionCall.FunctionName}`: {ex.Message}";
+                    }
+                }
+
+            }
+            return  result ?? "🤖 No tool used. Here's my response.";
+        }
+
+        private static readonly Dictionary<string, Func<JsonElement, string>> ToolMap = new()
+        {
+            ["CreateFile"] = args => ToolFunctions.CreateFile(
+                args.GetProperty("filename").GetString()!,
+                args.GetProperty("content").GetString()!
+            ),
+            ["FetchWebData"] = args => ToolFunctions.FetchWebData(
+                args.GetProperty("url").GetString()!
+            ),
+            ["SendEmail"] = args => ToolFunctions.SendEmail(
+                args.GetProperty("to").GetString()!,
+                args.GetProperty("subject").GetString()!,
+                args.GetProperty("body").GetString()!
+            )
+        };
+
     }
 
 }

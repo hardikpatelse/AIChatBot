@@ -1,0 +1,20 @@
+<div #chatHistoryContainer class="chat-history flex-grow-1 overflow-auto bg-white p-3 rounded mb-3">
+    <div *ngIf="chatHistory.length === 0 && !isLoading && !errorMessage"
+        class="no-messages text-center text-secondary fst-italic">
+        No Messages found
+    </div>
+    <div *ngFor="let msg of chatHistory" [ngClass]="msg.role">
+        <div class="message">
+            <strong *ngIf="msg.role === 'user'" class="text-primary">You:</strong>
+            <strong *ngIf="msg.role === 'assistant'" class="text-success">Bot:</strong>
+            <br />
+            <span class="message-content d-block" [innerHTML]="parseMarkdown(msg.content)"></span>
+            <div class="message-meta text-end fst-italic text-muted small">
+                {{ msg.dateTime | date:'short' }}
+            </div>
+        </div>
+    </div>
+    <div *ngIf="isLoading" class="message bot">
+        <app-typing-indicator></app-typing-indicator>
+    </div>
+</div>
