@@ -1,6 +1,25 @@
-@AIChatBot.API_HostAddress = http://localhost:5103
+@AIChatBot.API_HostAddress = https://localhost:7154
 
-GET {{AIChatBot.API_HostAddress}}/weatherforecast/
-Accept: application/json
+
+GET {{AIChatBot.API_HostAddress}}/api/tools/schema
 
 ###
+
+POST {{AIChatBot.API_HostAddress}}/chat
+Content-Type: application/json
+
+{
+  //ChatRequest
+}
+
+###
+
+@modelId=string
+GET {{AIChatBot.API_HostAddress}}/chat/history?modelId={{modelId}}
+
+###
+
+GET {{AIChatBot.API_HostAddress}}/models
+
+###
+

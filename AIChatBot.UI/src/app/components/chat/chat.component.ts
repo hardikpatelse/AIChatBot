@@ -3,7 +3,6 @@ import { ChatService } from '../../services/chat.service'
 import { Model } from '../../entities/model'
 import { ChatHistoryResponse, ChatMessage } from '../../entities/chat-history'
 import { marked } from 'marked'
-import { ORCall } from '../../services/orcall.service'
 
 @Component({
   selector: 'app-chat',
@@ -21,7 +20,7 @@ export class Chat implements OnInit {
   errorMessage: string = '';
   selectedChatMode: string = 'chat';
 
-  constructor(private chatService: ChatService, private cdr: ChangeDetectorRef, private orCall: ORCall) { }
+  constructor(private chatService: ChatService, private cdr: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     this.chatService.getModels().subscribe({
