@@ -1,4 +1,6 @@
-﻿namespace AIChatBot.API.Services
+﻿using AIChatBot.API.Models.Custom;
+
+namespace AIChatBot.API.Services
 {
     public static class ToolFunctions
     {
@@ -20,9 +22,32 @@
 
         public static string SendEmail(string to, string subject, string body)
         {
-            // Simulate email sending (log to console)
-            return $"📧 Email sent to {to} with subject '{subject}' \n Body: {body}.";
+            // Build MailData
+            var mailData = new MailData
+            {
+                EmailToId = to,
+                EmailToName = to, // Or set as needed
+                EmailSubject = subject,
+                EmailBody = body
+            };
+
+            // Get the service provider from a static accessor
+            var provider = ServiceProviderAccessor.ServiceProvider;
+            if (provider == null)
+                return "❌ MailService not available.";
+
+            var mailService = provider.GetService<MailService>();
+            if (mailService == null)
+                return "❌ MailService not available.";
+
+            var result = mailService.SendMail(mailData);
+            return result ? $"📧 Email sent to {to} with subject '{subject}'." : "❌ Failed to send email.";
         }
     }
 
+    // Static accessor for the root IServiceProvider
+    public static class ServiceProviderAccessor
+    {
+        public static IServiceProvider ServiceProvider { get; set; }
+    }
 }

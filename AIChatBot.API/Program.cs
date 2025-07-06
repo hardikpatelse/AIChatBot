@@ -2,6 +2,7 @@ using AIChatBot.API.AIServices;
 using AIChatBot.API.Factory;
 using AIChatBot.API.Interfaces;
 using AIChatBot.API.Models;
+using AIChatBot.API.Models.Custom;
 using AIChatBot.API.Services;
 using Microsoft.OpenApi.Models; // Ensure this directive is present for Swagger support  
 
@@ -23,9 +24,11 @@ builder.Services.AddHttpClient<OpenRouterChatService>();
 builder.Services.AddScoped<AgentService>();
 builder.Services.AddScoped<ToolsRegistryService>();
 builder.Services.AddScoped<IChatService, ChatService>();
+builder.Services.AddSingleton<MailService>();
 
 builder.Services.Configure<OpenRouterModelsApi>(builder.Configuration.GetSection("OpenRouterModelsApi"));
 builder.Services.Configure<OllamaModelsApi>(builder.Configuration.GetSection("OllamaModelsApi"));
+builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 
 builder.Services.AddScoped<ChatModelServiceFactory>();
 builder.Services.AddScoped<ChatHistoryService>();
@@ -40,6 +43,9 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
+
+// Set the root service provider for static access
+AIChatBot.API.Services.ServiceProviderAccessor.ServiceProvider = app.Services;
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
