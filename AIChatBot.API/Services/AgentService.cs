@@ -68,23 +68,6 @@ namespace AIChatBot.API.Services
                 // Fallback to legacy parsing if not valid JSON
             }
 
-            //// Legacy parsing (if not JSON)
-            //if (response.Contains("CreateFile"))
-            //{
-            //    var match = Regex.Match(response, @"CreateFile\(([^,]+),\s?(.+)\)");
-            //    return ToolFunctions.CreateFile(match.Groups[1].Value.Trim('"'), match.Groups[2].Value.Trim('"'));
-            //}
-            //if (response.Contains("FetchWebData"))
-            //{
-            //    var match = Regex.Match(response, @"FetchWebData\((.+)\)");
-            //    return ToolFunctions.FetchWebData(match.Groups[1].Value.Trim('"'));
-            //}
-            //if (response.Contains("SendEmail"))
-            //{
-            //    var match = Regex.Match(response, @"SendEmail\(([^,]+),\s?([^,]+),\s?(.+)\)");
-            //    return ToolFunctions.SendEmail(match.Groups[1].Value.Trim('"'), match.Groups[2].Value.Trim('"'), match.Groups[3].Value.Trim('"'));
-            //}
-
             return "🤖 No matching tool found.";
         }
 
@@ -102,16 +85,22 @@ namespace AIChatBot.API.Services
                         if (ToolMap.TryGetValue(functionCall.FunctionName, out var func))
                         {
                             var toolResult = func(args);
-                            return $"✅ Tool `{functionCall.FunctionName}` executed:\n{toolResult}";
+                            result += $"✅ Tool `{functionCall.FunctionName}` executed:\n{toolResult}\n";
                         }
-                        return $"❌ Unknown tool: {functionCall.FunctionName}";
+                        else 
+                        { 
+                            result += $"❌ Unknown tool: {functionCall.FunctionName}\n";
+                        }
                     }
                     catch (Exception ex)
                     {
                         return $"❌ Error executing tool `{functionCall.FunctionName}`: {ex.Message}";
                     }
                 }
-
+                else if (!string.IsNullOrEmpty(functionCall.TextResponse))
+                {
+                    return $"🤖 Final Response:\n{functionCall.TextResponse}";
+                }
             }
             return  result ?? "🤖 No tool used. Here's my response.";
         }

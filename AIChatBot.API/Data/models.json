@@ -77,7 +77,7 @@
     "description": "GPT-3.5 Turbo is OpenAI's fastest model. It can understand and generate natural language or code, and is optimized for chat and traditional completion tasks.",
     "referralSource": "OpenRouter",
     "referenceLink": "https://openrouter.ai/openai/gpt-3.5-turbo-0613",
-    "supportedModes": [ "chat", "tools", "agent" ]
+    "supportedModes": [ "chat", "tools", "agent", "planner" ]
   },
   {
     "id": "google/gemini-2.0-flash-001",
@@ -87,6 +87,6 @@
     "description": "Gemini Flash 2.0 offers a significantly faster time to first token (TTFT) compared to Gemini Flash 1.5, while maintaining quality on par with larger models like Gemini Pro 1.5. It introduces notable enhancements in multimodal understanding, coding capabilities, complex instruction following, and function calling. These advancements come together to deliver more seamless and robust agentic experiences.",
     "referralSource": "OpenRouter",
     "referenceLink": "https://openrouter.ai/google/gemini-2.0-flash-001",
-    "supportedModes": [ "chat", "tools", "agent" ]
+    "supportedModes": [ "chat", "tools", "agent", "planner" ]
   }
 ]

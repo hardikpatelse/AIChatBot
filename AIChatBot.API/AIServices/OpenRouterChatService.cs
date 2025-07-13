@@ -1,6 +1,5 @@
 ﻿using AIChatBot.API.Interfaces;
 using AIChatBot.API.Models;
-using AIChatBot.API.Models.Tools_Structure;
 using AIChatBot.API.Services;
 using Microsoft.Extensions.Options;
 using System.Net.Http.Headers;
@@ -14,12 +13,14 @@ namespace AIChatBot.API.AIServices
         private readonly HttpClient _httpClient;
         private readonly ILogger<OpenRouterChatService> _logger;
         private readonly OpenRouterModelsApi _configurations;
+        private readonly ToolsRegistryService _toolsRegistryService;
 
-        public OpenRouterChatService(HttpClient httpClient, ILogger<OpenRouterChatService> logger, IOptions<OpenRouterModelsApi> options)
+        public OpenRouterChatService(HttpClient httpClient, ILogger<OpenRouterChatService> logger, IOptions<OpenRouterModelsApi> options, ToolsRegistryService toolsRegistryService)
         {
             _httpClient = httpClient;
             _logger = logger;
             _configurations = options.Value;
+            _toolsRegistryService = toolsRegistryService;
         }
 
         public async Task<string> SendMessageAsync(string model, string message)
@@ -61,7 +62,7 @@ namespace AIChatBot.API.AIServices
 
                 var stream = await response.Content.ReadAsStringAsync();
 
-                return ConvertDeepseekResponse(stream);
+                return ConvertOpenRouterResponse(stream);
             }
             catch (Exception ex)
             {
@@ -69,29 +70,25 @@ namespace AIChatBot.API.AIServices
                 throw;
             }
         }
-
-        public async Task<List<FunctionCallResult>> ChatWithFunctionSupportAsync(string model, string userMessage, List<ToolDefinition> tools)
+        
+        public async Task<List<FunctionCallResult>> ChatWithFunctionSupportAsync(string model, List<Dictionary<string, string>> userMessage)
         {
+            var tools = _toolsRegistryService.GetToolSchemas();
             var functionCallResults = new List<FunctionCallResult>();
+
             try
             {
                 var apiKey = _configurations.ApiKey;
 
                 var requestBody = new
+
                 {
                     model = model,
-                    messages = new[]
-                    {
-                        new
-                        {
-                            role = "user",
-                            content = userMessage
-                        }
-                    },
+                    messages = userMessage,
                     tools = tools,
-                    tool_choice = "auto" // Let the model decide
+                    tool_choice = "auto", // Let the model decide
                 };
-
+                
                 var request = new HttpRequestMessage(HttpMethod.Post, _configurations.Url);
                 request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
                 request.Content = new StringContent(JsonSerializer.Serialize(requestBody), Encoding.UTF8, "application/json");
@@ -110,7 +107,7 @@ namespace AIChatBot.API.AIServices
             return functionCallResults;
         }
 
-        private string ConvertDeepseekResponse(string modelResponse)
+        private string ConvertOpenRouterResponse(string modelResponse)
         {
             try
             {

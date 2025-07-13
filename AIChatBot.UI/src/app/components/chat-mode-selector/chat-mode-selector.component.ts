@@ -20,7 +20,8 @@ export class ChatModeSelectorComponent {
     options: ChatModeOption[] = [
         { value: 'chat', label: 'Chat-Only', icon: '🧠', description: 'Minimalist Q&A' },
         { value: 'tools', label: 'AI + Tools', icon: '🛠️', description: 'Task executor' },
-        { value: 'agent', label: 'AI Agent', icon: '🤖', description: 'Full planner/agent' }
+        { value: 'agent', label: 'AI Agent', icon: '🤖', description: 'Full planner/agent' },
+        { value: 'planner', label: 'Agent with Planning', icon: '🧠🛠️', description: 'Planning and execution' }
     ];
 
     selectedMode: string = 'chat';
