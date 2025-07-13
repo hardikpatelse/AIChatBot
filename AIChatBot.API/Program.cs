@@ -38,7 +38,7 @@ builder.Services.AddScoped<ChatHistoryService>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowLocalAngular",
-        policy => policy.WithOrigins("http://localhost:4200", "https://localhost:4200")
+        policy => policy.WithOrigins("http://localhost:4200", "https://localhost:4200", "https://aichatbot-hp.netlify.app/")
                         .AllowAnyHeader()
                         .AllowAnyMethod());
 });
