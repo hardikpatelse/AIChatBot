@@ -29,6 +29,7 @@ builder.Services.AddSingleton<MailService>();
 builder.Services.Configure<OpenRouterModelsApi>(builder.Configuration.GetSection("OpenRouterModelsApi"));
 builder.Services.Configure<OllamaModelsApi>(builder.Configuration.GetSection("OllamaModelsApi"));
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
+builder.Services.Configure<ChatHistoryOptions>(builder.Configuration.GetSection("ChatHistoryOptions"));
 
 builder.Services.AddScoped<ChatModelServiceFactory>();
 builder.Services.AddScoped<ChatHistoryService>();

@@ -1,8 +1,7 @@
 <div class="relative w-full max-w-sm">
     <label for="model-select" class="block mb-1 text-sm font-small">Select Model</label>
 
-    <select id="model-select" [(ngModel)]="selectedModelId" (change)="onModelChange()"
-        class="w-full p-2 pr-10 border rounded appearance-none form-control">
+    <select id="model-select" [(ngModel)]="selectedModelId" (change)="onModelChange()" class="form-select">
         <option *ngFor="let model of models" [value]="model.id">
             {{ model.name }} ({{ model.company }})
         </option>

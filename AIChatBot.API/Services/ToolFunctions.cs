@@ -1,4 +1,6 @@
 ﻿using AIChatBot.API.Models.Custom;
+using HtmlAgilityPack;
+using System.Text;
 
 namespace AIChatBot.API.Services
 {
@@ -15,10 +17,35 @@ namespace AIChatBot.API.Services
         public static string FetchWebData(string url)
         {
             using var client = new HttpClient();
-            var result = client.GetStringAsync(url).Result;
-            //Call AI model to get the summary from the result object.
-            return $"🌐 Data from {url.Substring(0, Math.Min(url.Length, 50))}...:\n{result.Substring(0, Math.Min(url.Length, 200))}";
+            var html = client.GetStringAsync(url).Result;
+
+            var doc = new HtmlDocument();
+            doc.LoadHtml(html);
+
+            // Attempt to extract main readable content: paragraphs and headlines
+            var nodes = doc.DocumentNode.SelectNodes("//h1 | //h2 | //h3 | //p");
+
+            if (nodes == null || nodes.Count == 0)
+                return $"🌐 No readable content found at {url}";
+
+            var sb = new StringBuilder();
+            foreach (var node in nodes)
+            {
+                var text = HtmlEntity.DeEntitize(node.InnerText).Trim();
+                if (!string.IsNullOrEmpty(text) && text.Length > 40) // filter noise
+                {
+                    sb.AppendLine($"• {text}");
+                }
+            }
+
+            // Truncate for preview if very long
+            var preview = sb.ToString();
+            if (preview.Length > 1000)
+                preview = preview.Substring(0, 1000) + "...";
+
+            return $"🌐 Extracted summary from {url}:\n\n{preview}";
         }
+
 
         public static string SendEmail(string to, string subject, string body)
         {

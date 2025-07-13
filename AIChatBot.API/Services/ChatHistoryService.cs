@@ -1,38 +1,55 @@
 using AIChatBot.API.Models;
+using AIChatBot.API.Models.Custom;
+using Microsoft.Extensions.Options;
 using System.Text.Json;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 
 namespace AIChatBot.API.Services
 {
     public class ChatHistoryService
     {
         private readonly string _chatHistoryPath = "Data/chatHistory.json";
+        private readonly int _retryCount;
+        private readonly int _retryDelayMs;
 
-        public ChatHistoryService()
+        public ChatHistoryService(IOptions<ChatHistoryOptions> options)
         {
+            var opts = options.Value;
+            _retryCount = opts.RetryCount;
+            _retryDelayMs = opts.RetryDelayMilliseconds;
         }
 
         public ModelChatHistory GetHistory(string modelId)
         {
-            if (!File.Exists(_chatHistoryPath))
-                return new ModelChatHistory { ModelId = modelId, History = new List<ChatMessage>() };
+            int retries = _retryCount;
+            while (retries-- > 0)
+            {
+                try
+                {
+                    if (!File.Exists(_chatHistoryPath))
+                        return new ModelChatHistory { ModelId = modelId, History = new List<ChatMessage>() };
 
-            var allHistories = JsonSerializer.Deserialize<List<ModelChatHistory>>(
-                File.ReadAllText(_chatHistoryPath),
-                new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new List<ModelChatHistory>();
+                    var allHistories = JsonSerializer.Deserialize<List<ModelChatHistory>>(
+                        File.ReadAllText(_chatHistoryPath),
+                        new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new List<ModelChatHistory>();
 
-            var modelHistory = allHistories.FirstOrDefault(h => h.ModelId == modelId);
-            if (modelHistory == null)
-                return new ModelChatHistory { ModelId = modelId, History = new List<ChatMessage>() };
+                    var modelHistory = allHistories.FirstOrDefault(h => h.ModelId == modelId);
+                    if (modelHistory == null)
+                        return new ModelChatHistory { ModelId = modelId, History = new List<ChatMessage>() };
 
-            return modelHistory;
+                    return modelHistory;
+                }
+                catch (IOException ex) when ((ex.HResult & 0x0000FFFF) == 32 && retries > 0)
+                {
+                    Thread.Sleep(_retryDelayMs);
+                }
+            }
+            // If all retries fail, return empty history
+            return new ModelChatHistory { ModelId = modelId, History = new List<ChatMessage>() };
         }
 
         public void SaveHistory(string modelId, List<ChatMessage> histories)
         {
-            int retries = 3;
+            int retries = _retryCount;
             while (retries-- > 0)
             {
                 try
@@ -63,7 +80,7 @@ namespace AIChatBot.API.Services
                 }
                 catch when (retries > 0)
                 {
-                    Thread.Sleep(200);
+                    Thread.Sleep(_retryDelayMs);
                 }
             }
         }

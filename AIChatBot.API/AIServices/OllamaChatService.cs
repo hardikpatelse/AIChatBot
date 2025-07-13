@@ -1,6 +1,5 @@
 ﻿using AIChatBot.API.Interfaces;
 using AIChatBot.API.Models;
-using AIChatBot.API.Models.Tools_Structure;
 using AIChatBot.API.Services;
 using Microsoft.Extensions.Options;
 using System.Text;
@@ -13,12 +12,14 @@ namespace AIChatBot.API.AIServices
         private readonly HttpClient _httpClient;
         private readonly ILogger<OllamaChatService> _logger;
         private readonly OllamaModelsApi _configurations;
+        private readonly ToolsRegistryService _toolsRegistryService;
 
-        public OllamaChatService(HttpClient httpClient, ILogger<OllamaChatService> logger, IOptions<OllamaModelsApi> options)
+        public OllamaChatService(HttpClient httpClient, ILogger<OllamaChatService> logger, IOptions<OllamaModelsApi> options, ToolsRegistryService toolsRegistryService)
         {
             _httpClient = httpClient;
             _logger = logger;
             _configurations = options.Value;
+            _toolsRegistryService = toolsRegistryService;
         }
 
         public async Task<string> SendMessageAsync(string model, string message)
@@ -48,22 +49,16 @@ namespace AIChatBot.API.AIServices
             }
         }
 
-        public async Task<List<FunctionCallResult>> ChatWithFunctionSupportAsync(string model, string userMessage, List<ToolDefinition> tools)
+        public async Task<List<FunctionCallResult>> ChatWithFunctionSupportAsync(string model, List<Dictionary<string, string>> userMessage)
         {
+            var tools = _toolsRegistryService.GetToolSchemas();
             var functionCallResults = new List<FunctionCallResult>();
             try
             {
                 var requestBody = new
                 {
                     model = model,
-                    prompt = new[]
-                    {
-                    new
-                    {
-                        role = "user",
-                        content = userMessage
-                    }
-                },
+                    prompt = userMessage,
                     tools = tools,
                     tool_choice = "auto" // Let the model decide
                 };
