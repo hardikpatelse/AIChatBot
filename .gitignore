@@ -361,3 +361,9 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/AIChatBot.UI/.angular/cache/20.0.3/ai-chatbot
+AIChatBot.UI/.editorconfig
+AIChatBot.UI/.vscode/extensions.json
+AIChatBot.UI/.vscode/launch.json
+AIChatBot.UI/.vscode/tasks.json
+/AIChatBot.UI/dist/ai-chatbot
