@@ -1,0 +1,11 @@
+.modal-body {
+    padding: 2rem;
+}
+
+.form-label {
+    font-weight: 500;
+}
+
+.btn-primary {
+    min-width: 100px;
+}

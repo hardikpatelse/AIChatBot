@@ -1,5 +1,5 @@
 ﻿using AIChatBot.API.AIServices;
-using AIChatBot.API.Interfaces;
+using AIChatBot.API.Interfaces.Services;
 
 namespace AIChatBot.API.Factory
 {

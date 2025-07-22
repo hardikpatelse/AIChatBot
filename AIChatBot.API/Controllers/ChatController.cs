@@ -1,4 +1,4 @@
-using AIChatBot.API.Interfaces;
+using AIChatBot.API.Interfaces.Services;
 using AIChatBot.API.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,9 +16,9 @@ namespace AIChatBot.API.Controllers
         }
 
         [HttpGet("history")]
-        public IActionResult GetHistory([FromQuery] string modelId)
+        public IActionResult GetHistory([FromQuery] Guid userId, Guid chatSessionIdentity, int modelId)
         {
-            return _chatService.GetHistory(modelId);
+            return _chatService.GetHistory(userId, chatSessionIdentity, modelId);
         }
 
         [HttpPost]

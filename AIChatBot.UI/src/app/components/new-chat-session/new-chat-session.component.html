@@ -1,0 +1,13 @@
+<div class="modal-body">
+    <form (ngSubmit)="createSession()">
+        <div class="mb-3">
+            <app-model-selector (modelSelected)="onModelSelected($event)"></app-model-selector>
+        </div>
+        <div class="mb-3">
+            <label for="chatName" class="form-label">Chat Name</label>
+            <input type="text" id="chatName" class="form-control" [(ngModel)]="chatName" name="chatName" required />
+        </div>
+        <div *ngIf="errorMessage" class="text-danger small mb-2">{{ errorMessage }}</div>
+        <button type="submit" class="btn btn-primary" [disabled]="isLoading || !chatName.trim()">Create</button>
+    </form>
+</div>

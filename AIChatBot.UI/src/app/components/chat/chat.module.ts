@@ -8,6 +8,10 @@ import { ModelSelectorModule } from '../model-selector/model-selector.module'
 import { ChatModeSelectorModule } from '../chat-mode-selector/chat-mode-selector.module'
 import { ModelDetailsModule } from '../model-details/model-details.module'
 import { ChatHistoryModule } from '../chat-history/chat-history.module'
+import { UserFormModule } from '../user-form/user-form.module'
+import { HeaderModule } from '../header/header.module'
+import { ChatSessionListModule } from '../chat-session-list/chat-session-list.module'
+import { NewChatSessionModule } from '../new-chat-session/new-chat-session.module'
 
 const routes: Routes = [
     { path: '', component: Chat }
@@ -25,7 +29,11 @@ const routes: Routes = [
         ModelSelectorModule,
         ChatModeSelectorModule,
         ModelDetailsModule,
-        ChatHistoryModule
+        ChatHistoryModule,
+        UserFormModule,
+        HeaderModule,
+        ChatSessionListModule,
+        NewChatSessionModule
     ]
 })
 export class ChatModule { }

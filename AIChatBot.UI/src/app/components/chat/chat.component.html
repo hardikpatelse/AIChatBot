@@ -1,12 +1,16 @@
-<div class="chat-layout d-flex vh-100">
+<app-header [userName]="userName"></app-header>
+
+<div class="chat-layout d-flex">
     <!-- Side Panel -->
-    <aside class="side-panel bg-light border-end p-3 d-flex flex-column align-items-center" style="width:320px;">
+    <aside class="side-panel bg-light border-end p-3 d-flex flex-column align-items-center">
         <div class="side-panel-header w-100 mb-3">
             <app-chat-mode-selector (modeSelected)="onModeSelected($event)"
-                [supportedModes]="selectedModelDetails?.supportedModes ?? ['chat','tools']"></app-chat-mode-selector>
+                [supportedModes]="chatModes || []"></app-chat-mode-selector>
             <app-model-selector (modelSelected)="onModelChange($event)"></app-model-selector>
         </div>
-        <app-model-details *ngIf="selectedModelDetails" [model]="selectedModelDetails"></app-model-details>
+        <!-- <app-model-details *ngIf="selectedModelDetails" [model]="selectedModelDetails"></app-model-details> -->
+        <app-chat-session-list class="w-100" *ngIf="userObj?.chatSessions" [sessions]="userObj.chatSessions"
+            (sessionSelected)="onSessionSelected($event)" (newChat)="onNewChat($event)"></app-chat-session-list>
     </aside>
 
     <!-- Main Chat Area -->
@@ -22,3 +26,41 @@
         <div *ngIf="errorMessage" class="error text-danger text-center mt-2">{{ errorMessage }}</div>
     </div>
 </div>
+
+<ng-template #userFormModal>
+    <div class="modal fade show d-block" tabindex="-1" style="background: rgba(127, 127, 127, 0.33);">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">User Information</h5>
+                </div>
+                <div class="modal-body">
+                    <app-user-form (userSubmitted)="onUserFormSubmit($event)"></app-user-form>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #newChatSessionModal>
+    <div class="modal fade show d-block" tabindex="-1" style="background: rgba(127, 127, 127, 0.33);">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Create New Chat Session</h5>
+                </div>
+                <div class="modal-body">
+                    <app-new-chat-session [userId]="userId"
+                        (sessionCreated)="onNewChatSessionCreated($event)"></app-new-chat-session>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-container *ngIf="!userId">
+    <ng-container *ngTemplateOutlet="userFormModal"></ng-container>
+</ng-container>
+<ng-container *ngIf="showNewChatModal">
+    <ng-container *ngTemplateOutlet="newChatSessionModal"></ng-container>
+</ng-container>

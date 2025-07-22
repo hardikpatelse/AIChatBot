@@ -1,0 +1,18 @@
+<form [formGroup]="userForm" (ngSubmit)="onSubmit(userForm)">
+    <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" id="email" class="form-control" formControlName="email" name="email" required email
+            (blur)="onEmailBlur($event)" />
+        <div *ngIf="!userForm.controls['email'].valid" class="text-danger small">
+            Email is required and must be valid.
+        </div>
+    </div>
+    <div class="mb-3">
+        <label for="name" class="form-label">Name</label>
+        <input type="text" id="name" class="form-control" formControlName="name" name="name" required />
+        <div *ngIf="!userForm.controls['name'].valid" class="text-danger small">
+            Name is required.
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary" [disabled]="!userForm.valid">{{buttonText}}</button>
+</form>

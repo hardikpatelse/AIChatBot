@@ -1,4 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core'
+import { ChatMode } from '../../entities/chatmode'
+import { AIModelChatMode } from '../../entities/aimodel-chatmode'
 
 interface ChatModeOption {
     value: string
@@ -14,21 +16,18 @@ interface ChatModeOption {
     styleUrls: ['./chat-mode-selector.component.css']
 })
 export class ChatModeSelectorComponent {
-    @Input() supportedModes: string[] = ['chat', 'tools'];
+    @Input() supportedModes: AIModelChatMode[] = [];
     @Output() modeSelected = new EventEmitter<string>();
-
-    options: ChatModeOption[] = [
-        { value: 'chat', label: 'Chat-Only', icon: '🧠', description: 'Minimalist Q&A' },
-        { value: 'tools', label: 'AI + Tools', icon: '🛠️', description: 'Task executor' },
-        { value: 'agent', label: 'AI Agent', icon: '🤖', description: 'Full planner/agent' },
-        { value: 'planner', label: 'Agent with Planning', icon: '🧠🛠️', description: 'Planning and execution' }
-    ];
 
     selectedMode: string = 'chat';
 
+    constructor() {
+
+    }
+
     ngOnInit() {
         const savedMode = localStorage.getItem('selectedChatMode')
-        if (savedMode && this.options.some(opt => opt.value === savedMode)) {
+        if (savedMode && this.supportedModes.some(opt => opt.chatMode.mode === savedMode)) {
             this.selectMode(savedMode)
         }
     }

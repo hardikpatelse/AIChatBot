@@ -1,9 +1,8 @@
 ﻿using AIChatBot.API.Factory;
-using AIChatBot.API.Interfaces;
+using AIChatBot.API.Interfaces.Services;
 using AIChatBot.API.Models;
+using AIChatBot.API.Models.Entities;
 using Microsoft.AspNetCore.Mvc;
-using System.Reflection;
-using System.Runtime.InteropServices.JavaScript;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -11,39 +10,49 @@ namespace AIChatBot.API.Services
 {
     public class ChatService : IChatService
     {
-        private readonly ChatHistoryService _chatHistoryService;
+        private readonly IChatHistoryService _chatHistoryService;
         private readonly ChatModelServiceFactory _factory;
         private readonly AgentService _agentService;
+        private readonly IChatSessionServices _chatSessionServices;
+        private readonly IModelService _modelService;
 
         public ChatService(
-            ChatHistoryService chatHistoryService,
+            IChatHistoryService chatHistoryService,
             ChatModelServiceFactory factory,
-            AgentService agentService)
+            AgentService agentService,
+            IChatSessionServices chatSessionServices,
+            IModelService modelService)
         {
             _chatHistoryService = chatHistoryService;
             _factory = factory;
             _agentService = agentService;
+            _chatSessionServices = chatSessionServices;
+            _modelService = modelService;
         }
 
-        public IActionResult GetHistory(string modelId)
+        public IActionResult GetHistory(Guid userId, Guid chatSessionIdentity, int modelId)
         {
-            var history = _chatHistoryService.GetHistory(modelId);
+            var history = _chatHistoryService.GetHistory(userId, chatSessionIdentity, modelId);
             return new OkObjectResult(history);
         }
 
         public async Task<IActionResult> PostChat(ChatRequest request)
         {
+            var sessionWithoutMessages = _chatSessionServices.GetSessionWithoutMessages(request.UserId, request.ChatSessionIdentity);
+            var selectedModel = _modelService.GetModelById(request.ModelId);
+            // Validate request
             var messages = new List<ChatMessage>
             {
                 new ChatMessage
                 {
                     Role = "user",
+                    ChatSessionId = sessionWithoutMessages.Id,
                     Content = request.Message,
-                    DateTime = DateTime.UtcNow
+                    TimeStamp = DateTime.UtcNow
                 }
             };
 
-            _chatHistoryService.SaveHistory(request.Model, messages);
+            _chatHistoryService.SaveHistory(request.UserId, sessionWithoutMessages.Id, messages);
 
             string responseText = string.Empty;
             bool saveHistory = true;
@@ -51,28 +60,28 @@ namespace AIChatBot.API.Services
             if (request.AIMode == "tools")
             {
                 var prompt = preparePrompt(request.Message);
-                var service = _factory.GetService(request.Model);
-                var aiResponse = await service.SendMessageAsync(request.Model, prompt);
+                var service = _factory.GetService(selectedModel.Name);
+                var aiResponse = await service.SendMessageAsync(selectedModel.Name, prompt);
                 responseText = await _agentService.RunToolAsync(aiResponse);
             }
             else if (request.AIMode == "agent")
             {
-                var service = _factory.GetService(request.Model);
+                var service = _factory.GetService(selectedModel.Name);
 
                 var msgObject = new List<Dictionary<string, string>>
                 {
                     new() { ["role"] = "user", ["content"] = request.Message }
                 };
-                var response = await service.ChatWithFunctionSupportAsync(request.Model, msgObject);
+                var response = await service.ChatWithFunctionSupportAsync(selectedModel.Name, msgObject);
                 responseText = await _agentService.RunAgentAsync(response);
             }
             else if (request.AIMode == "planner")
             {
-                var service = _factory.GetService(request.Model);
+                var service = _factory.GetService(selectedModel.Name);
                 var funcExecLog = new List<FunctionCallResult>();
                 for (int step = 0; step < 5; step++) // Limit recursion
                 {
-                    var msgObject = preparePlannerPrompt(request, step, funcExecLog);
+                    var msgObject = preparePlannerPrompt(request, step, funcExecLog, selectedModel);
 
                     //Serialize the message object for logging
                     var msgJson = JsonSerializer.Serialize(msgObject, new JsonSerializerOptions
@@ -82,7 +91,7 @@ namespace AIChatBot.API.Services
                     });
                     Console.WriteLine(msgJson);
 
-                    var response = await service.ChatWithFunctionSupportAsync(request.Model, msgObject);
+                    var response = await service.ChatWithFunctionSupportAsync(selectedModel.Name, msgObject);
 
 
                     var responseJson = JsonSerializer.Serialize(response, new JsonSerializerOptions
@@ -91,14 +100,15 @@ namespace AIChatBot.API.Services
                         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
                     });
                     Console.WriteLine(responseJson);
-                    if (!response.Any(a=> !string.IsNullOrWhiteSpace(a.FunctionName)))
+                    if (!response.Any(a => !string.IsNullOrWhiteSpace(a.FunctionName)))
                     {
                         break;
                     }
                     var iterationResponse = await _agentService.RunAgentAsync(response);
                     foreach (var funcCall in response.Where(a => !string.IsNullOrWhiteSpace(a.FunctionName)))
                     {
-                        funcExecLog.Add(new FunctionCallResult() { 
+                        funcExecLog.Add(new FunctionCallResult()
+                        {
                             FunctionName = funcCall.FunctionName,
                             ArgumentsJson = funcCall.ArgumentsJson,
                             TextResponse = iterationResponse
@@ -110,11 +120,11 @@ namespace AIChatBot.API.Services
                         {
                             Role = "assistant",
                             Content = iterationResponse,
-                            DateTime = DateTime.UtcNow
+                            TimeStamp = DateTime.UtcNow
                         }
                     };
 
-                    _chatHistoryService.SaveHistory(request.Model, messages);
+                    _chatHistoryService.SaveHistory(request.UserId, sessionWithoutMessages.Id, messages);
 
                     responseText += $"Recursion Step: {step} \n" + iterationResponse;
                 }
@@ -126,8 +136,8 @@ namespace AIChatBot.API.Services
             }
             else
             {
-                var service = _factory.GetService(request.Model);
-                responseText = await service.SendMessageAsync(request.Model, request.Message);
+                var service = _factory.GetService(selectedModel.Name);
+                responseText = await service.SendMessageAsync(selectedModel.Name, request.Message);
             }
 
             if (saveHistory)
@@ -138,11 +148,11 @@ namespace AIChatBot.API.Services
                     {
                         Role = "assistant",
                         Content = responseText,
-                        DateTime = DateTime.UtcNow
+                        TimeStamp = DateTime.UtcNow
                     }
                 };
 
-                _chatHistoryService.SaveHistory(request.Model, messages);
+                _chatHistoryService.SaveHistory(request.UserId, sessionWithoutMessages.Id, messages);
             }
             return new OkObjectResult(new ChatResponse { Response = responseText });
         }
@@ -156,11 +166,11 @@ namespace AIChatBot.API.Services
             return $"{systemPrompt}\nUser: {userInput}";
         }
 
-        private List<Dictionary<string, string>> preparePlannerPrompt(ChatRequest request, int step, List<FunctionCallResult> functionCalls)
+        private List<Dictionary<string, string>> preparePlannerPrompt(ChatRequest request, int step, List<FunctionCallResult> functionCalls, AIModel model)
         {
-            var history = _chatHistoryService.GetHistory(request.Model);
+            var chatSession = _chatHistoryService.GetHistory(request.UserId, request.ChatSessionIdentity, request.ModelId);
 
-            var msgObject = history.History.Select(m => new Dictionary<string, string>
+            var msgObject = chatSession.Messages.Select(m => new Dictionary<string, string>
             {
                 ["role"] = m.Role.ToLower(),  // "user" or "assistant"
                 ["content"] = m.Content

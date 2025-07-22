@@ -1,17 +1,25 @@
-﻿using AIChatBot.API.Factory;
-using AIChatBot.API.Models;
+﻿using AIChatBot.API.Models;
 using System.Text.Json;
 
 namespace AIChatBot.API.Services
 {
     public class AgentService
     {
-        private readonly ChatModelServiceFactory _factory;
-
-        public AgentService(ChatModelServiceFactory factory)
+        private readonly Dictionary<string, Func<JsonElement, string>> ToolMap = new()
         {
-            _factory = factory;
-        }
+            ["CreateFile"] = args => ToolFunctions.CreateFile(
+                args.GetProperty("filename").GetString()!,
+                args.GetProperty("content").GetString()!
+            ),
+            ["FetchWebData"] = args => ToolFunctions.FetchWebData(
+                args.GetProperty("url").GetString()!
+            ),
+            ["SendEmail"] = args => ToolFunctions.SendEmail(
+                args.GetProperty("to").GetString()!,
+                args.GetProperty("subject").GetString()!,
+                args.GetProperty("body").GetString()!
+            )
+        };
 
         public async Task<string> RunToolAsync(string aiResponse)
         {
@@ -87,8 +95,8 @@ namespace AIChatBot.API.Services
                             var toolResult = func(args);
                             result += $"✅ Tool `{functionCall.FunctionName}` executed:\n{toolResult}\n";
                         }
-                        else 
-                        { 
+                        else
+                        {
                             result += $"❌ Unknown tool: {functionCall.FunctionName}\n";
                         }
                     }
@@ -102,24 +110,10 @@ namespace AIChatBot.API.Services
                     return $"🤖 Final Response:\n{functionCall.TextResponse}";
                 }
             }
-            return  result ?? "🤖 No tool used. Here's my response.";
+            return result ?? "🤖 No tool used. Here's my response.";
         }
 
-        private static readonly Dictionary<string, Func<JsonElement, string>> ToolMap = new()
-        {
-            ["CreateFile"] = args => ToolFunctions.CreateFile(
-                args.GetProperty("filename").GetString()!,
-                args.GetProperty("content").GetString()!
-            ),
-            ["FetchWebData"] = args => ToolFunctions.FetchWebData(
-                args.GetProperty("url").GetString()!
-            ),
-            ["SendEmail"] = args => ToolFunctions.SendEmail(
-                args.GetProperty("to").GetString()!,
-                args.GetProperty("subject").GetString()!,
-                args.GetProperty("body").GetString()!
-            )
-        };
+
 
     }
 

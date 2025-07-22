@@ -1,10 +1,12 @@
+import { AIModelChatMode } from "./aimodel-chatmode"
+
 export interface Model {
-    id: string
+    id: number
     name: string
     company?: string
     logoUrl?: string
     description?: string
     referralSource?: string
     referenceLink?: string
-    supportedModes: string[]
+    aiModelChatModes: AIModelChatMode[]
 }

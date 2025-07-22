@@ -10,10 +10,10 @@ import { ChatService } from '../../services/chat.service'
 })
 export class ModelSelectorComponent implements OnInit {
   models: Model[] = [];
-  selectedModelId: string = '';
+  selectedModelId: number = 0;
   showDetails = false;
 
-  @Output() modelSelected = new EventEmitter<string>();
+  @Output() modelSelected = new EventEmitter<Model>();
 
   constructor(private chatService: ChatService) {
 
@@ -23,36 +23,39 @@ export class ModelSelectorComponent implements OnInit {
     this.getModels()
 
     const saved = localStorage.getItem('selectedModel')
-    this.selectedModelId = saved || this.models[0]?.id
-    this.modelSelected.emit(this.selectedModelId)
+    this.selectedModelId = saved ? Number(saved) : this.models[0]?.id
+    this.modelSelected.emit(this.getModelById(this.selectedModelId))
   }
 
   getModels() {
     this.chatService.getModels().subscribe(data => {
       this.models = data
-      const savedModel = localStorage.getItem('selectedModel')
+      const savedModelId = localStorage.getItem('selectedModel')
       if (this.models.length > 0) {
-        if (savedModel && this.models.some(m => m.id === savedModel)) {
-          this.selectedModelId = savedModel
+        if (savedModelId && this.models.some(m => m.id === Number(savedModelId))) {
+          this.selectedModelId = Number(savedModelId)
         } else {
           this.selectedModelId = this.models[0].id
-
         }
-        this.modelSelected.emit(this.selectedModelId)
+        this.modelSelected.emit(this.getModelById(this.selectedModelId))
       } else {
-        this.selectedModelId = ''
+        this.selectedModelId = 0
       }
     })
   }
 
   onModelChange() {
-    localStorage.setItem('selectedModel', this.selectedModelId)
-    this.modelSelected.emit(this.selectedModelId)
+    localStorage.setItem('selectedModel', this.selectedModelId.toString())
+    this.modelSelected.emit(this.getModelById(this.selectedModelId))
   }
 
   selectModel(model: Model) {
     this.selectedModelId = model.id
     this.showDetails = false
     this.onModelChange()
+  }
+
+  private getModelById(modelId: number): Model {
+    return this.models.find(model => model.id === modelId) || this.models[0]
   }
 }
