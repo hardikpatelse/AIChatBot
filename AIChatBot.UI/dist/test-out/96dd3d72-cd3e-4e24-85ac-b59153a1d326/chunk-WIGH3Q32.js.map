@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["src/app/services/user.service.ts"],
-  "sourcesContent": ["import { Injectable } from '@angular/core'\nimport { HttpClient } from '@angular/common/http'\nimport { Observable } from 'rxjs'\n\nexport interface User {\n    id: string\n    email: string\n    name: string\n    chatSessions: any[]\n}\n\n@Injectable({\n    providedIn: 'root'\n})\nexport class UserService {\n    private apiUrl = 'https://localhost:7154/api';\n\n    constructor(private http: HttpClient) { }\n\n    getUserByEmail(email: string): Observable<User> {\n        return this.http.get<User>(`${this.apiUrl}/user/by-email?email=${encodeURIComponent(email)}`)\n    }\n\n    registerUser(name: string, email: string): Observable<User> {\n        return this.http.post<User>(`${this.apiUrl}/user/register`, { 'name': name, 'email': email })\n    }\n}\n"],
-  "mappings": ";;;;;;;;;;;;;AAAA;AACA;AAaO,IAAM,cAAN,MAAMA,aAAW;EAGA;EAFZ,SAAS;EAEjB,YAAoB,MAAgB;AAAhB,SAAA,OAAA;EAAoB;EAExC,eAAe,OAAa;AACxB,WAAO,KAAK,KAAK,IAAU,GAAG,KAAK,MAAM,wBAAwB,mBAAmB,KAAK,CAAC,EAAE;EAChG;EAEA,aAAa,MAAc,OAAa;AACpC,WAAO,KAAK,KAAK,KAAW,GAAG,KAAK,MAAM,kBAAkB,EAAE,QAAQ,MAAM,SAAS,MAAK,CAAE;EAChG;;;;;AAXS,cAAW,WAAA;EAHvB,WAAW;IACR,YAAY;GACf;GACY,WAAW;",
-  "names": ["UserService"]
-}

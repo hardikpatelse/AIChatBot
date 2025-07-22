@@ -367,3 +367,4 @@ AIChatBot.UI/.vscode/extensions.json
 AIChatBot.UI/.vscode/launch.json
 AIChatBot.UI/.vscode/tasks.json
 /AIChatBot.UI/dist/ai-chatbot
+/AIChatBot.UI/dist/test-out

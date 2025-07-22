@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["src/app/components/typing-indicator/typing-indicator.css"],
-  "sourcesContent": [".typing-indicator {\n    display: flex;\n    align-items: center;\n    height: 24px;\n    padding-left: 8px;\n\n    .dot {\n        width: 8px;\n        height: 8px;\n        margin: 0 3px;\n        border-radius: 50%;\n        background-color: #4fa3f7;\n        animation: blink 1.4s infinite both;\n    }\n\n    .dot:nth-child(2) {\n        animation-delay: 0.2s;\n    }\n\n    .dot:nth-child(3) {\n        animation-delay: 0.4s;\n    }\n}\n\n@keyframes blink {\n\n    0%,\n    80%,\n    100% {\n        transform: scale(0);\n        opacity: 0.3;\n    }\n\n    40% {\n        transform: scale(1);\n        opacity: 1;\n    }\n}"],
-  "mappings": ";AAAA,CAAC;AACG,WAAS;AACT,eAAa;AACb,UAAQ;AACR,gBAAc;AAkBlB;AAtBA,CAAC,iBAMG,CAAC;AACG,SAAO;AACP,UAAQ;AACR,UAAQ,EAAE;AACV,iBAAe;AACf,oBAAkB;AAClB,aAAW,MAAM,KAAK,SAAS;AACnC;AAbJ,CAAC,iBAeG,CATC,GASG;AACA,mBAAiB;AACrB;AAjBJ,CAAC,iBAmBG,CAbC,GAaG;AACA,mBAAiB;AACrB;AAGJ,WAZmB;AAcf;AAGI,eAAW,MAAM;AACjB,aAAS;AACb;AAEA;AACI,eAAW,MAAM;AACjB,aAAS;AACb;AACJ;",
-  "names": []
-}

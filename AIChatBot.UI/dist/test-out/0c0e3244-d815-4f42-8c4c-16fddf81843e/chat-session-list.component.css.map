@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["src/app/components/chat-session-list/chat-session-list.component.css"],
-  "sourcesContent": [".chat-session-list {\n    max-width: 350px;\n    margin: 1rem auto;\n}\n\n.card-header {\n    background: #0d6efd;\n    color: #fff;\n}\n\n.list-group-item {\n    font-size: 1.05em;\n    cursor: pointer;\n    transition: background 0.2s;\n}\n\n.list-group-item:hover {\n    background: #f1f3f5;\n}"],
-  "mappings": ";AAAA,CAAC;AACG,aAAW;AACX,UAAQ,KAAK;AACjB;AAEA,CAAC;AACG,cAAY;AACZ,SAAO;AACX;AAEA,CAAC;AACG,aAAW;AACX,UAAQ;AACR,cAAY,WAAW;AAC3B;AAEA,CANC,eAMe;AACZ,cAAY;AAChB;",
-  "names": []
-}

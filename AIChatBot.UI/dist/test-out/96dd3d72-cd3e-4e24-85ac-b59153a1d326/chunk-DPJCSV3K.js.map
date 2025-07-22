@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["src/app/services/chat-session.service.ts"],
-  "sourcesContent": ["import { Injectable } from '@angular/core'\nimport { HttpClient } from '@angular/common/http'\nimport { Observable } from 'rxjs'\n\nexport interface ChatSession {\n    id: string\n    name: string\n    // Add other properties as needed\n}\n\n@Injectable({\n    providedIn: 'root'\n})\nexport class ChatSessionService {\n    private apiUrl = 'https://localhost:7154/api';\n\n    constructor(private http: HttpClient) { }\n\n    createSession(userId: string, name: string, modelId: number): Observable<ChatSession> {\n        return this.http.post<ChatSession>(`${this.apiUrl}/ChatSession/create`, { 'name': name, 'userId': userId, 'modelId': modelId })\n    }\n\n    getSessions(userId: string): Observable<ChatSession[]> {\n        return this.http.get<ChatSession[]>(`${this.apiUrl}/ChatSession/list?userId=${encodeURIComponent(userId)}`)\n    }\n}\n"],
-  "mappings": ";;;;;;;;;;;;;AAAA;AACA;AAYO,IAAM,qBAAN,MAAMA,oBAAkB;EAGP;EAFZ,SAAS;EAEjB,YAAoB,MAAgB;AAAhB,SAAA,OAAA;EAAoB;EAExC,cAAc,QAAgB,MAAc,SAAe;AACvD,WAAO,KAAK,KAAK,KAAkB,GAAG,KAAK,MAAM,uBAAuB,EAAE,QAAQ,MAAM,UAAU,QAAQ,WAAW,QAAO,CAAE;EAClI;EAEA,YAAY,QAAc;AACtB,WAAO,KAAK,KAAK,IAAmB,GAAG,KAAK,MAAM,4BAA4B,mBAAmB,MAAM,CAAC,EAAE;EAC9G;;;;;AAXS,qBAAkB,WAAA;EAH9B,WAAW;IACR,YAAY;GACf;GACY,kBAAkB;",
-  "names": ["ChatSessionService"]
-}
