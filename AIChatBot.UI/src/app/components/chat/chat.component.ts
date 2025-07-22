@@ -109,8 +109,9 @@ export class Chat implements OnInit {
     this.userName = user.name || ''
     this.userId = user.id
     if (user.chatSessions?.length > 0) {
-      // Load the first chat session or handle as needed
-      this.chatSessionIdentity = user.chatSessions?.[0]?.id
+      // Select the most recent chat session or handle as needed
+      const mostRecentSession = this.getMostRecentSession(user.chatSessions);
+      this.chatSessionIdentity = mostRecentSession?.id || user.chatSessions?.[0]?.id;
     } else {
       // Automatically show new chat modal after registration/start
       this.showNewChatModal = true
