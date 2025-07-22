@@ -25,6 +25,7 @@ export class Chat implements OnInit {
   chatModes: AIModelChatMode[] = [];
   userId?: string
   chatSessionIdentity?: string
+  selectedSession?: any
   userObj!: User
   userName: string = '';
   showNewChatModal: boolean = false;
@@ -61,7 +62,8 @@ export class Chat implements OnInit {
   }
 
   loadHistory(): void {
-    this.chatService.getHistory(this.selectedModelId).subscribe({
+    if (!this.userId || !this.chatSessionIdentity) return
+    this.chatService.getHistory(this.userId, this.chatSessionIdentity, this.selectedModelId).subscribe({
       next: (modelHistory: ChatHistoryResponse) => {
         this.chatHistory = modelHistory.history || []
         this.errorMessage = ''
@@ -114,8 +116,10 @@ export class Chat implements OnInit {
   }
 
   onSessionSelected(session: any) {
-    // Load chat history by session.id or perform any action needed
-    // Example: this.loadHistoryBySession(session.id);
+    // Set the selected session and load its chat history
+    this.selectedSession = session
+    this.chatSessionIdentity = session.id
+    this.loadHistory()
   }
 
   onNewChat(session: any) {
@@ -126,6 +130,11 @@ export class Chat implements OnInit {
 
   onNewChatSessionCreated(session: any) {
     this.showNewChatModal = false
-    // Optionally add the new session to the session list or reload sessions
+    // Set the newly created session as selected and load its history (which will be empty initially)
+    if (session) {
+      this.onSessionSelected(session)
+      // Optionally refresh the user's chat sessions list
+      // this.loadUserSessions()
+    }
   }
 }

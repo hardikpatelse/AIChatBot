@@ -14,6 +14,7 @@ export interface ChatSession {
 })
 export class ChatSessionListComponent {
     @Input() sessions: ChatSession[] = [];
+    @Input() selectedSession?: ChatSession;
     @Output() sessionSelected = new EventEmitter<ChatSession>();
     @Output() newChat = new EventEmitter<void>();
 
@@ -23,5 +24,9 @@ export class ChatSessionListComponent {
 
     onNewChatClick() {
         this.newChat.emit()
+    }
+
+    isSelected(session: ChatSession): boolean {
+        return this.selectedSession?.id === session.id
     }
 }

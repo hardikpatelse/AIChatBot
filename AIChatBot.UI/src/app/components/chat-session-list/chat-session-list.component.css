@@ -17,3 +17,15 @@
 .list-group-item:hover {
     background: #f1f3f5;
 }
+
+.list-group-item.selected-session {
+    background: #cfe2ff;
+    border-color: #0d6efd;
+}
+
+.list-group-item.list-group-item-primary.selected-session {
+    background: #b6d7ff;
+    border-color: #0d6efd;
+    color: #004085;
+    font-weight: 600;
+}
