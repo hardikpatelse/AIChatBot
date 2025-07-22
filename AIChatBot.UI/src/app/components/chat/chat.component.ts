@@ -108,7 +108,7 @@ export class Chat implements OnInit {
     this.userObj = user
     this.userName = user.name || ''
     this.userId = user.id
-    if (user.chatSessions?.length > 0 && user.chatSessions[0]?.id) {
+    if (user.chatSessions?.[0]?.id) {
       // Load the first chat session or handle as needed
       this.chatSessionIdentity = user.chatSessions[0].id
     } else {
