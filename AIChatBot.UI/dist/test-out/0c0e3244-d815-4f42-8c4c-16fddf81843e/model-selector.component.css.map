@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/components/model-selector/model-selector.component.css"],
+  "sourcesContent": ["select {\n    cursor: pointer;\n}\n\nimg {\n    border-radius: 4px;\n}"],
+  "mappings": ";AAAA;AACI,UAAQ;AACZ;AAEA;AACI,iBAAe;AACnB;",
+  "names": []
+}

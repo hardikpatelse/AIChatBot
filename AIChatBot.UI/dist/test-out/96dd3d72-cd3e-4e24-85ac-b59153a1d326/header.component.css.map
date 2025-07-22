@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/components/header/header.component.css"],
+  "sourcesContent": [".page-header {\n    background: #f8f9fa;\n    border-bottom: 1px solid #dee2e6;\n}"],
+  "mappings": ";AAAA,CAAC;AACG,cAAY;AACZ,iBAAe,IAAI,MAAM;AAC7B;",
+  "names": []
+}

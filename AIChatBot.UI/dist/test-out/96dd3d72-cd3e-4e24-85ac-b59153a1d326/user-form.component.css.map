@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/components/user-form/user-form.component.css"],
+  "sourcesContent": [".form-label {\n    font-weight: 500;\n}\n\n.mb-3 {\n    margin-bottom: 1rem;\n}"],
+  "mappings": ";AAAA,CAAC;AACG,eAAa;AACjB;AAEA,CAAC;AACG,iBAAe;AACnB;",
+  "names": []
+}

@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/services/chat.service.ts"],
+  "sourcesContent": ["import { HttpClient } from '@angular/common/http'\nimport { Injectable } from '@angular/core'\nimport { Observable } from 'rxjs/internal/Observable'\nimport { Model } from '../entities/model'\nimport { ChatHistoryResponse } from '../entities/chat-history'\n\n@Injectable({\n  providedIn: 'root'\n})\nexport class ChatService {\n  private apiUrl = 'https://localhost:7154';\n\n  constructor(private http: HttpClient) { }\n\n  getModels(): Observable<Model[]> {\n    return this.http.get<Model[]>(`${this.apiUrl}/models`)\n  }\n\n  getHistory(modelId: number): Observable<ChatHistoryResponse> {\n    return this.http.get<ChatHistoryResponse>(`${this.apiUrl}/chat/history?modelId=${modelId}`)\n  }\n\n  sendMessage(userId: string, chatSessionIdentity: string, modelId: number, message: string, aIMode: string): Observable<any> {\n    return this.http.post<any>(`${this.apiUrl}/chat`, { userId, chatSessionIdentity, modelId, message, aIMode })\n  }\n}\n"],
+  "mappings": ";;;;;;;;;;;;;IASa;;;;;AATb;AACA;AAQO,IAAM,cAAN,MAAMA,aAAW;MAGF;MAFZ,SAAS;MAEjB,YAAoB,MAAgB;AAAhB,aAAA,OAAA;MAAoB;MAExC,YAAS;AACP,eAAO,KAAK,KAAK,IAAa,GAAG,KAAK,MAAM,SAAS;MACvD;MAEA,WAAW,SAAe;AACxB,eAAO,KAAK,KAAK,IAAyB,GAAG,KAAK,MAAM,yBAAyB,OAAO,EAAE;MAC5F;MAEA,YAAY,QAAgB,qBAA6B,SAAiB,SAAiB,QAAc;AACvG,eAAO,KAAK,KAAK,KAAU,GAAG,KAAK,MAAM,SAAS,EAAE,QAAQ,qBAAqB,SAAS,SAAS,OAAM,CAAE;MAC7G;;;;;AAfW,kBAAW,WAAA;MAHvB,WAAW;QACV,YAAY;OACb;OACY,WAAW;;;",
+  "names": ["ChatService"]
+}

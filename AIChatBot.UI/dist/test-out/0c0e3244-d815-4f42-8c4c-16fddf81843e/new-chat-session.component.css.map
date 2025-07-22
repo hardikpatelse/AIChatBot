@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/components/new-chat-session/new-chat-session.component.css"],
+  "sourcesContent": [".modal-body {\n    padding: 2rem;\n}\n\n.form-label {\n    font-weight: 500;\n}\n\n.btn-primary {\n    min-width: 100px;\n}"],
+  "mappings": ";AAAA,CAAC;AACG,WAAS;AACb;AAEA,CAAC;AACG,eAAa;AACjB;AAEA,CAAC;AACG,aAAW;AACf;",
+  "names": []
+}
