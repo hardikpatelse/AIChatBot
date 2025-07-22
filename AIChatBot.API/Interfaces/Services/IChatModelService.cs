@@ -1,6 +1,6 @@
 ﻿using AIChatBot.API.Models;
 
-namespace AIChatBot.API.Interfaces
+namespace AIChatBot.API.Interfaces.Services
 {
     public interface IChatModelService
     {

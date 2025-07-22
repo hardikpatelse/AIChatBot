@@ -1,11 +1,11 @@
 ﻿using AIChatBot.API.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AIChatBot.API.Interfaces
+namespace AIChatBot.API.Interfaces.Services
 {
     public interface IChatService
     {
-        IActionResult GetHistory(string modelId);
+        IActionResult GetHistory(Guid userId, Guid chatSessionIdentity, int modelId);
         Task<IActionResult> PostChat(ChatRequest request);
     }
 }

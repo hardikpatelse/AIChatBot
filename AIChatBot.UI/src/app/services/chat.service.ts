@@ -16,11 +16,11 @@ export class ChatService {
     return this.http.get<Model[]>(`${this.apiUrl}/models`)
   }
 
-  getHistory(modelId: string): Observable<ChatHistoryResponse> {
+  getHistory(modelId: number): Observable<ChatHistoryResponse> {
     return this.http.get<ChatHistoryResponse>(`${this.apiUrl}/chat/history?modelId=${modelId}`)
   }
 
-  sendMessage(model: string, message: string, aIMode: string): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/chat`, { model, message, aIMode })
+  sendMessage(userId: string, chatSessionIdentity: string, modelId: number, message: string, aIMode: string): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/chat`, { userId, chatSessionIdentity, modelId, message, aIMode })
   }
 }

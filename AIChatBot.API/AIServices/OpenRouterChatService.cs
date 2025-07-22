@@ -1,4 +1,4 @@
-﻿using AIChatBot.API.Interfaces;
+﻿using AIChatBot.API.Interfaces.Services;
 using AIChatBot.API.Models;
 using AIChatBot.API.Services;
 using Microsoft.Extensions.Options;

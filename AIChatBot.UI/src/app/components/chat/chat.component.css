@@ -1,6 +1,7 @@
 .chat-layout {
     display: flex;
-    height: 100vh;
+    height: calc(100vh - 65px);
+    /* Adjust height to fit below header */
     font-family: Arial, 'Liberation Sans', 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -9,7 +10,7 @@
 }
 
 .side-panel {
-    width: 260px;
+    width: 320px;
     background: #f8f8f8;
     border-right: 1px solid #e0e0e0;
     padding: 16px;

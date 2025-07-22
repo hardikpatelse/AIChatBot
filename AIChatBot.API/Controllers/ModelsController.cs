@@ -1,7 +1,7 @@
+using AIChatBot.API.Data;
+using AIChatBot.API.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
-using System.Text.Json;
-using AIChatBot.API.Services;
-using AIChatBot.API.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace AIChatBot.API.Controllers
 {
@@ -9,23 +9,24 @@ namespace AIChatBot.API.Controllers
     [Route("[controller]")]
     public class ModelsController : ControllerBase
     {
-        private readonly RetryFileOperationService _retryService;
-
-        public ModelsController(RetryFileOperationService retryService)
+        
+        private readonly IModelService _modelService;
+        public ModelsController(ChatBotDbContext dbContext, IModelService modelService)
         {
-            _retryService = retryService;
+            _modelService = modelService;
         }
 
         [HttpGet]
         public IActionResult GetModels()
         {
-            return _retryService.RetryFileOperation(() =>
+            var models = _modelService.GetAllModelsAsync();
+
+            if (models == null || !models.Any())
             {
-                var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-                var models = JsonSerializer.Deserialize<List<ModelResponse>>(
-                    System.IO.File.ReadAllText("Data/models.json"), options);
-                return Ok(models);
-            });
+                return NotFound("No models found.");
+            }
+
+            return Ok(models);
         }
     }
 }

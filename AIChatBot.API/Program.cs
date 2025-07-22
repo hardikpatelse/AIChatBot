@@ -1,9 +1,13 @@
 using AIChatBot.API.AIServices;
+using AIChatBot.API.Data;
+using AIChatBot.API.DataContext;
 using AIChatBot.API.Factory;
-using AIChatBot.API.Interfaces;
+using AIChatBot.API.Interfaces.DataContext;
+using AIChatBot.API.Interfaces.Services;
 using AIChatBot.API.Models;
 using AIChatBot.API.Models.Custom;
 using AIChatBot.API.Services;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models; // Ensure this directive is present for Swagger support  
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,23 +21,39 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "AIChatBot API", Version = "v1" });
 });
-builder.Services.AddSingleton<RetryFileOperationService>();
 
-builder.Services.AddHttpClient<OllamaChatService>();
-builder.Services.AddHttpClient<OpenRouterChatService>();
-builder.Services.AddScoped<AgentService>();
-builder.Services.AddScoped<ToolsRegistryService>();
-builder.Services.AddScoped<IChatService, ChatService>();
-builder.Services.AddSingleton<MailService>();
+builder.Services.AddDbContext<ChatBotDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("ChatBotDb")));
+builder.Services.AddSingleton<RetryFileOperationService>();
 
 builder.Services.Configure<OpenRouterModelsApi>(builder.Configuration.GetSection("OpenRouterModelsApi"));
 builder.Services.Configure<OllamaModelsApi>(builder.Configuration.GetSection("OllamaModelsApi"));
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 builder.Services.Configure<ChatHistoryOptions>(builder.Configuration.GetSection("ChatHistoryOptions"));
 
-builder.Services.AddScoped<ChatModelServiceFactory>();
-builder.Services.AddScoped<ChatHistoryService>();
+builder.Services.AddScoped<IChatHistoryDataContext, ChatHistoryDataContext>();
+builder.Services.AddScoped<IChatSessionDataContext, ChatSessionDataContext>();
+builder.Services.AddScoped<IUserDataContext, UserDataContext>();
 
+builder.Services.AddScoped<ChatModelServiceFactory>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IModelService, ModelService>();
+builder.Services.AddScoped<IChatSessionServices, ChatSessionServices>();
+builder.Services.AddScoped<IChatHistoryService, ChatHistoryService>();
+builder.Services.AddScoped<IChatService, ChatService>();
+builder.Services.AddSingleton<MailService>();
+builder.Services.AddHttpClient<OllamaChatService>();
+builder.Services.AddHttpClient<OpenRouterChatService>();
+builder.Services.AddScoped<AgentService>();
+builder.Services.AddScoped<ToolsRegistryService>();
+
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+    });
+
+builder.Services.AddMemoryCache();
 // Add CORS policy
 builder.Services.AddCors(options =>
 {
