@@ -3,6 +3,7 @@ namespace AIChatBot.API.Models.Entities
     public class AIModel
     {
         public int Id { get; set; }
+        public string ModelName { get; set; }
         public string Name { get; set; }
         public string Company { get; set; }
         public string LogoUrl { get; set; }

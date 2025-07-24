@@ -5,7 +5,7 @@ namespace AIChatBot.API.Interfaces.Services
 {
     public interface IChatService
     {
-        IActionResult GetHistory(Guid userId, Guid chatSessionIdentity, int modelId);
+        IActionResult GetHistory(Guid userId, Guid chatSessionIdentity);
         Task<IActionResult> PostChat(ChatRequest request);
     }
 }

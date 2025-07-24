@@ -14,9 +14,9 @@ namespace AIChatBot.API.Services
         }
 
         // Fetch chat sessions and messages by UserId and ModelId
-        public ChatSession GetHistory(Guid userId, Guid chatSessionIdentity, int modelId)
+        public ChatSession GetHistory(Guid userId, Guid chatSessionIdentity)
         {
-            var session = _chatHistoryDataContext.GetHistory(userId, chatSessionIdentity, modelId);
+            var session = _chatHistoryDataContext.GetHistory(userId, chatSessionIdentity);
 
             if (session != null)
             {
@@ -28,7 +28,6 @@ namespace AIChatBot.API.Services
                 {
                     UniqueIdentity = chatSessionIdentity,
                     UserId = userId,
-                    ModelId = modelId,
                     Messages = new List<ChatMessage>(),
                     CreatedAt = DateTime.UtcNow
                 };

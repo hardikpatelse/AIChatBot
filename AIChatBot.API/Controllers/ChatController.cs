@@ -16,9 +16,9 @@ namespace AIChatBot.API.Controllers
         }
 
         [HttpGet("history")]
-        public IActionResult GetHistory([FromQuery] Guid userId, Guid chatSessionIdentity, int modelId)
+        public IActionResult GetHistory([FromQuery] Guid userId, Guid chatSessionIdentity)
         {
-            return _chatService.GetHistory(userId, chatSessionIdentity, modelId);
+            return _chatService.GetHistory(userId, chatSessionIdentity);
         }
 
         [HttpPost]

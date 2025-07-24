@@ -1,10 +1,16 @@
 export interface ChatMessage {
-    role: 'user' | 'assistant'
+    id: number
+    chatSessionId: number
+    role: string
     content: string
-    dateTime: string
+    timeStamp: string
 }
 
 export interface ChatHistoryResponse {
-    modelId: string
-    history: ChatMessage[]
+    id: number
+    name: string
+    uniqueIdentity: string
+    userId: string
+    createdAt: string
+    messages: ChatMessage[]
 }
