@@ -20,7 +20,11 @@ export class ChatService {
     return this.http.get<ChatHistoryResponse>(`${this.apiUrl}/chat/history?userId=${encodeURIComponent(userId)}&chatSessionIdentity=${encodeURIComponent(chatSessionIdentity)}&modelId=${modelId}`)
   }
 
-  sendMessage(userId: string, chatSessionIdentity: string, modelId: number, message: string, aIMode: string): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/chat`, { userId, chatSessionIdentity, modelId, message, aIMode })
+  sendMessage(userId: string, chatSessionIdentity: string, modelId: number, message: string, aIMode: string, connectionId?: string): Observable<any> {
+    const payload: any = { userId, chatSessionIdentity, modelId, message, aIMode };
+    if (connectionId) {
+      payload.connectionId = connectionId;
+    }
+    return this.http.post<any>(`${this.apiUrl}/chat`, payload);
   }
 }

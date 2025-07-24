@@ -12,6 +12,7 @@ export class ChatHistoryComponent implements AfterViewInit {
     @Input() isLoading: boolean = false;
     @Input() errorMessage: string = '';
     @Input() parseMarkdown!: (content: string) => string
+    @Input() statusMessages: string[] = [];
 
     @ViewChild('chatHistoryContainer') chatHistoryContainer!: ElementRef
 

@@ -17,7 +17,7 @@
     <!-- Main Chat Area -->
     <div class="chat-container flex-grow-1 d-flex flex-column p-4" *ngIf="chatHistory">
         <app-chat-history [chatHistory]="chatHistory" [isLoading]="isLoading" [errorMessage]="errorMessage"
-            [parseMarkdown]="parseMarkdown"></app-chat-history>
+            [parseMarkdown]="parseMarkdown" [statusMessages]="statusMessages"></app-chat-history>
         <form class="input-bar d-flex align-items-center bg-light p-2 rounded border" (ngSubmit)="sendMessage()">
             <textarea class="form-control me-2" [(ngModel)]="userMessage" name="userMessage" [disabled]="isLoading"
                 rows="3" style="resize: none; min-height: 3em; max-height: 8em;" (keydown.enter)="sendMessage()"

@@ -45,19 +45,6 @@ export class Chat implements OnInit, OnDestroy {
     })
   }
 
-  ngOnDestroy(): void {
-    this.signalRService.stopConnection();
-  }
-
-  // Initialize SignalR status update callback
-  initializeSignalR(): void {
-    this.signalRService.statusUpdateCallback = (status: string) => {
-      console.log("Status update received:", status);
-      this.statusMessages.push(status);
-      this.cdr.detectChanges();
-    };
-  }
-
   onModelChange(model: Model): void {
     if (!model) {
       this.selectedModelId = 0
@@ -87,7 +74,6 @@ export class Chat implements OnInit, OnDestroy {
     })
   }
 
-
   sendMessage(): void {
     if (!this.userMessage.trim() || this.isLoading || !this.userId || !this.chatSessionIdentity) return
     const msg = this.userMessage
@@ -100,14 +86,7 @@ export class Chat implements OnInit, OnDestroy {
     this.userMessage = ''
     this.isLoading = true
     this.errorMessage = ''
-    
-    // Clear previous status messages
-    this.statusMessages = [];
-    
-    // Get SignalR connection ID
-    const connectionId = this.signalRService.getConnectionId();
-    
-    this.chatService.sendMessage(this.userId, this.chatSessionIdentity, this.selectedModelId, msg, this.selectedChatMode, connectionId || undefined).subscribe({
+    this.chatService.sendMessage(this.userId, this.chatSessionIdentity, this.selectedModelId, msg, this.selectedChatMode).subscribe({
       next: res => {
         this.chatHistory.push({
           role: 'assistant', content: res.response, timeStamp: new Date().toISOString(),
@@ -115,17 +94,14 @@ export class Chat implements OnInit, OnDestroy {
           chatSessionId: this.selectedSession?.id || 0
         })
         this.isLoading = false
-        // Clear status messages after completion
-        this.statusMessages = [];
       },
       error: () => {
         this.errorMessage = 'Failed to send message to server.'
         this.isLoading = false
-        // Clear status messages on error
-        this.statusMessages = [];
       }
     })
   }
+
   parseMarkdown(content: string): any {
     return marked.parse(content)
   }
@@ -147,11 +123,6 @@ export class Chat implements OnInit, OnDestroy {
       this.showNewChatModal = true
     }
     // Optionally set chatSessionIdentity or other properties here
-    
-    // Start SignalR connection and initialize callbacks
-    if (this.userId) {
-      this.signalRService.startConnection(this.userId);
-    }
   }
 
   onSessionSelected(session: any) {

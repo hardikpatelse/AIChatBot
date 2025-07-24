@@ -1,0 +1,38 @@
+  sendMessage(): void {
+    if (!this.userMessage.trim() || this.isLoading || !this.userId || !this.chatSessionIdentity) return
+    const msg = this.userMessage
+    const now = new Date().toISOString()
+    this.chatHistory.push({
+      role: 'user', content: msg, timeStamp: now,
+      id: 0,
+      chatSessionId: this.selectedSession?.id || 0
+    })
+    this.userMessage = ''
+    this.isLoading = true
+    this.errorMessage = ''
+    
+    // Clear previous status messages
+    this.statusMessages = [];
+    
+    // Get SignalR connection ID
+    const connectionId = this.signalRService.getConnectionId();
+    
+    this.chatService.sendMessage(this.userId, this.chatSessionIdentity, this.selectedModelId, msg, this.selectedChatMode, connectionId || undefined).subscribe({
+      next: res => {
+        this.chatHistory.push({
+          role: 'assistant', content: res.response, timeStamp: new Date().toISOString(),
+          id: 0,
+          chatSessionId: this.selectedSession?.id || 0
+        })
+        this.isLoading = false
+        // Clear status messages after completion
+        this.statusMessages = [];
+      },
+      error: () => {
+        this.errorMessage = 'Failed to send message to server.'
+        this.isLoading = false
+        // Clear status messages on error
+        this.statusMessages = [];
+      }
+    })
+  }
