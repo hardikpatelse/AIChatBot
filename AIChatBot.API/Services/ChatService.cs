@@ -181,10 +181,16 @@ namespace AIChatBot.API.Services
                 {
                     msgObject = new List<Dictionary<string, string>>();
                 }
-                msgObject.AddRange(
-                    new() { ["role"] = "system", ["content"] = "You are a tool-using agent. When your task is complete, end with a natural sentence and do not call a function." },
-                    new() { ["role"] = "user", ["content"] = request.Message }
-                    );
+                msgObject.Add(new Dictionary<string, string>
+                {
+                    ["role"] = "system", 
+                    ["content"] = "You are a tool-using agent. When your task is complete, end with a natural sentence and do not call a function."
+                });
+                msgObject.Add(new Dictionary<string, string>
+                {
+                    ["role"] = "user", 
+                    ["content"] = request.Message
+                });
             }
             else
             {
