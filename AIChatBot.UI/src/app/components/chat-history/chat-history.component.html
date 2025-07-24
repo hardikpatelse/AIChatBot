@@ -10,7 +10,7 @@
             <br />
             <span class="message-content d-block" [innerHTML]="parseMarkdown(msg.content)"></span>
             <div class="message-meta text-end fst-italic text-muted small">
-                {{ msg.dateTime | date:'short' }}
+                {{ msg.timeStamp | date:'short' }}
             </div>
         </div>
     </div>

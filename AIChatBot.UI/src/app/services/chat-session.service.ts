@@ -1,12 +1,7 @@
 import { Injectable } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
 import { Observable } from 'rxjs'
-
-export interface ChatSession {
-    id: string
-    name: string
-    // Add other properties as needed
-}
+import { ChatSession } from '../entities/chatsession'
 
 @Injectable({
     providedIn: 'root'
@@ -16,8 +11,8 @@ export class ChatSessionService {
 
     constructor(private http: HttpClient) { }
 
-    createSession(userId: string, name: string, modelId: number): Observable<ChatSession> {
-        return this.http.post<ChatSession>(`${this.apiUrl}/ChatSession/create`, { 'name': name, 'userId': userId, 'modelId': modelId })
+    createSession(userId: string, name: string): Observable<ChatSession> {
+        return this.http.post<ChatSession>(`${this.apiUrl}/ChatSession/create`, { 'name': name, 'userId': userId })
     }
 
     getSessions(userId: string): Observable<ChatSession[]> {

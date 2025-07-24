@@ -1,11 +1,11 @@
-import { Component, OnInit, ChangeDetectorRef, ViewChild, ElementRef, AfterViewInit } from '@angular/core'
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core'
 import { ChatService } from '../../services/chat.service'
 import { Model } from '../../entities/model'
 import { ChatHistoryResponse, ChatMessage } from '../../entities/chat-history'
 import { marked } from 'marked'
-import { User } from '../../services/user.service'
-import { ChatMode } from '../../entities/chatmode'
+import { User } from '../../entities/user'
 import { AIModelChatMode } from '../../entities/aimodel-chatmode'
+import { ChatSession } from '../../entities/chatsession'
 
 @Component({
   selector: 'app-chat',
@@ -17,7 +17,7 @@ export class Chat implements OnInit {
   models: Model[] = [];
   selectedModelId: number = 0;
   selectedModelDetails: Model | null = null;
-  chatHistory: ChatMessage[] = [];
+  chatHistory!: ChatMessage[]
   userMessage: string = '';
   isLoading: boolean = false;
   errorMessage: string = '';
@@ -25,12 +25,12 @@ export class Chat implements OnInit {
   chatModes: AIModelChatMode[] = [];
   userId?: string
   chatSessionIdentity?: string
+  selectedSession?: any
   userObj!: User
   userName: string = '';
   showNewChatModal: boolean = false;
 
-  constructor(private chatService: ChatService) { }
-  //, private cdr: ChangeDetectorRef
+  constructor(private chatService: ChatService, private cdr: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     this.chatService.getModels().subscribe({
@@ -44,7 +44,7 @@ export class Chat implements OnInit {
   }
 
   onModelChange(model: Model): void {
-    if (!model || !model.id) {
+    if (!model) {
       this.selectedModelId = 0
       this.selectedModelDetails = null
       this.chatModes = []
@@ -54,18 +54,17 @@ export class Chat implements OnInit {
       this.chatModes = (this.selectedModelDetails && Array.isArray((this.selectedModelDetails as any).chatModes))
         ? (this.selectedModelDetails as any).chatModes
         : []
-      console.log('Selected Model:', this.selectedModelDetails)
-      console.log('Chat Modes:', this.chatModes)
-      // this.loadHistory();
     }
   }
 
   loadHistory(): void {
-    this.chatService.getHistory(this.selectedModelId).subscribe({
-      next: (modelHistory: ChatHistoryResponse) => {
-        this.chatHistory = modelHistory.history || []
+    if (!this.userId || !this.chatSessionIdentity) return
+    this.chatService.getHistory(this.userId, this.chatSessionIdentity, this.selectedModelId).subscribe({
+      next: (session: ChatHistoryResponse) => {
+        this.selectedSession = session
+        this.chatHistory = session.messages || []
         this.errorMessage = ''
-        // this.cdr.detectChanges()
+        this.cdr.detectChanges() // Ensure view updates after loading history
       },
       error: () => {
         this.errorMessage = 'Failed to load chat history.'
@@ -77,16 +76,22 @@ export class Chat implements OnInit {
     if (!this.userMessage.trim() || this.isLoading || !this.userId || !this.chatSessionIdentity) return
     const msg = this.userMessage
     const now = new Date().toISOString()
-    this.chatHistory.push({ role: 'user', content: msg, dateTime: now })
+    this.chatHistory.push({
+      role: 'user', content: msg, timeStamp: now,
+      id: 0,
+      chatSessionId: this.selectedSession?.id || 0
+    })
     this.userMessage = ''
     this.isLoading = true
     this.errorMessage = ''
-    // this.cdr.detectChanges()
     this.chatService.sendMessage(this.userId, this.chatSessionIdentity, this.selectedModelId, msg, this.selectedChatMode).subscribe({
       next: res => {
-        this.chatHistory.push({ role: 'assistant', content: res.response, dateTime: new Date().toISOString() })
+        this.chatHistory.push({
+          role: 'assistant', content: res.response, timeStamp: new Date().toISOString(),
+          id: 0,
+          chatSessionId: this.selectedSession?.id || 0
+        })
         this.isLoading = false
-        // this.cdr.detectChanges()
       },
       error: () => {
         this.errorMessage = 'Failed to send message to server.'
@@ -110,7 +115,7 @@ export class Chat implements OnInit {
     this.userId = user.id
     if (user.chatSessions?.length > 0) {
       // Select the most recent chat session or handle as needed
-      this.chatSessionIdentity = user.chatSessions?.[0]?.id
+      this.chatSessionIdentity = user.chatSessions?.[0]?.uniqueIdentity
     } else {
       // Automatically show new chat modal after registration/start
       this.showNewChatModal = true
@@ -119,8 +124,10 @@ export class Chat implements OnInit {
   }
 
   onSessionSelected(session: any) {
-    // Load chat history by session.id or perform any action needed
-    // Example: this.loadHistoryBySession(session.id);
+    // Set the selected session and load its chat history
+    this.selectedSession = session
+    this.chatSessionIdentity = session.uniqueIdentity
+    this.loadHistory()
   }
 
   onNewChat(session: any) {
@@ -131,6 +138,16 @@ export class Chat implements OnInit {
 
   onNewChatSessionCreated(session: any) {
     this.showNewChatModal = false
-    // Optionally add the new session to the session list or reload sessions
+    // Set the newly created session as selected and load its history (which will be empty initially)
+    if (session) {
+      this.refreshUserSessions(session)
+      this.onSessionSelected(session)
+    }
+  }
+
+  private refreshUserSessions(session: ChatSession) {
+    if (this.userObj && !this.userObj.chatSessions.some(s => s.id === session.id)) {
+      this.userObj.chatSessions.push(session)
+    }
   }
 }

@@ -1,6 +1,7 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core'
-import { User, UserService } from '../../services/user.service'
+import { UserService } from '../../services/user.service'
 import { FormBuilder, FormGroup, Validators } from '@angular/forms'
+import { User } from '../../entities/user'
 
 @Component({
     selector: 'app-user-form',

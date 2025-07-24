@@ -13,11 +13,11 @@ namespace AIChatBot.API.DataContext
         {
             _dbContext = dbContext;
         }
-        public ChatSession? GetHistory(Guid userId, Guid chatSessionIdentity, int modelId)
+        public ChatSession? GetHistory(Guid userId, Guid chatSessionIdentity)
         {
             return _dbContext.ChatSessions
                 .Include(s => s.Messages)
-                .Where(s => s.UserId == userId && s.UniqueIdentity == chatSessionIdentity && s.ModelId == modelId)
+                .Where(s => s.UserId == userId && s.UniqueIdentity == chatSessionIdentity)
                 .OrderByDescending(s => s.CreatedAt)
                 .FirstOrDefault();
 

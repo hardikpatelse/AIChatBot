@@ -35,7 +35,6 @@ namespace AIChatBot.API.DataContext
             {
                 Name = request.Name,
                 UserId = request.UserId.Value,
-                ModelId = request.ModelId.Value,
                 UniqueIdentity = Guid.NewGuid(),
                 CreatedAt = DateTime.UtcNow,
                 Messages = new List<ChatMessage>()

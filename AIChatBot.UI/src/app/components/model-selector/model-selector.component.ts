@@ -21,7 +21,6 @@ export class ModelSelectorComponent implements OnInit {
 
   ngOnInit(): void {
     this.getModels()
-
     const saved = localStorage.getItem('selectedModel')
     this.selectedModelId = saved ? Number(saved) : this.models[0]?.id
     this.modelSelected.emit(this.getModelById(this.selectedModelId))
@@ -55,7 +54,7 @@ export class ModelSelectorComponent implements OnInit {
     this.onModelChange()
   }
 
-  private getModelById(modelId: number): Model {
-    return this.models.find(model => model.id === modelId) || this.models[0]
+  private getModelById(modelId: number): Model | undefined {
+    return this.models.find(model => Number(model.id) === Number(modelId))
   }
 }

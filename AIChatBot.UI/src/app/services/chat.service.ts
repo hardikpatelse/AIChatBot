@@ -16,8 +16,8 @@ export class ChatService {
     return this.http.get<Model[]>(`${this.apiUrl}/models`)
   }
 
-  getHistory(modelId: number): Observable<ChatHistoryResponse> {
-    return this.http.get<ChatHistoryResponse>(`${this.apiUrl}/chat/history?modelId=${modelId}`)
+  getHistory(userId: string, chatSessionIdentity: string, modelId: number): Observable<ChatHistoryResponse> {
+    return this.http.get<ChatHistoryResponse>(`${this.apiUrl}/chat/history?userId=${encodeURIComponent(userId)}&chatSessionIdentity=${encodeURIComponent(chatSessionIdentity)}&modelId=${modelId}`)
   }
 
   sendMessage(userId: string, chatSessionIdentity: string, modelId: number, message: string, aIMode: string): Observable<any> {

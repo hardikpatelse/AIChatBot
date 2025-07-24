@@ -1,10 +1,11 @@
 <div class="chat-session-list card shadow-sm">
-    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+    <div class="card-header bg-light text-dark d-flex justify-content-between align-items-center">
         <h5 class="mb-0">Sessions</h5>
         <button class="btn btn-success btn-sm" (click)="onNewChatClick()">+ New Chat</button>
     </div>
     <ul class="list-group list-group-flush">
         <li *ngFor="let session of sessions" class="list-group-item d-flex align-items-center"
+            [class.list-group-item-primary]="isSelected(session)" [class.selected-session]="isSelected(session)"
             (click)="onSessionClick(session)">
             <span class="fw-bold me-2">🗨️</span>
             <span>{{ session.name }}</span>

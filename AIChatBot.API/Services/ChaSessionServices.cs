@@ -56,7 +56,7 @@ namespace AIChatBot.API.Services
 
         public async Task<ChatSession> CreateSessionAsync(ChatSessionRequest request)
         {
-            if (request.UserId == null || request.ModelId == null || string.IsNullOrWhiteSpace(request.Name))
+            if (request.UserId == null || string.IsNullOrWhiteSpace(request.Name))
                 return null;
             return await _chatSessionDataContext.CreateSessionAsync(request);
         }
