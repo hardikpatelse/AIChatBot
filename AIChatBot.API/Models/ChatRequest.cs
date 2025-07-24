@@ -7,5 +7,6 @@ namespace AIChatBot.API.Models
         public int ModelId { get; set; }
         public string Message { get; set; }
         public string AIMode { get; set; } = string.Empty;
+        public string? ConnectionId { get; set; }
     }
 }

@@ -1,10 +1,18 @@
-﻿using AIChatBot.API.Models;
+﻿using AIChatBot.API.Hubs;
+using AIChatBot.API.Models;
+using Microsoft.AspNetCore.SignalR;
 using System.Text.Json;
 
 namespace AIChatBot.API.Services
 {
     public class AgentService
     {
+        private readonly IHubContext<ChatHub> _hubContext;
+
+        public AgentService(IHubContext<ChatHub> hubContext)
+        {
+            _hubContext = hubContext;
+        }
         private readonly Dictionary<string, Func<JsonElement, string>> ToolMap = new()
         {
             ["CreateFile"] = args => ToolFunctions.CreateFile(
@@ -21,8 +29,13 @@ namespace AIChatBot.API.Services
             )
         };
 
-        public async Task<string> RunToolAsync(string aiResponse)
+        public async Task<string> RunToolAsync(string aiResponse, string? connectionId = null)
         {
+            // Broadcast thinking status
+            if (!string.IsNullOrEmpty(connectionId))
+            {
+                await _hubContext.Clients.Client(connectionId).SendAsync("ReceiveStatus", "🟡 Thinking...");
+            }
             // Remove code block formatting if present (e.g., ```json ... ```)
             aiResponse = aiResponse.Trim();
             if (aiResponse.StartsWith("```"))
@@ -52,23 +65,46 @@ namespace AIChatBot.API.Services
                     root.TryGetProperty("parameters", out var parametersElement))
                 {
                     var tool = toolElement.GetString();
+                    
+                    // Broadcast executing status
+                    if (!string.IsNullOrEmpty(connectionId))
+                    {
+                        await _hubContext.Clients.Client(connectionId).SendAsync("ReceiveStatus", $"🟢 Executing tool {tool}");
+                    }
+
+                    string result;
                     switch (tool)
                     {
                         case "CreateFile":
                             var filename = parametersElement.GetProperty("filename").GetString();
                             var content = parametersElement.GetProperty("content").GetString();
-                            return ToolFunctions.CreateFile(filename, content);
+                            result = ToolFunctions.CreateFile(filename, content);
+                            break;
 
                         case "FetchWebData":
                             var url = parametersElement.GetProperty("url").GetString();
-                            return ToolFunctions.FetchWebData(url);
+                            result = ToolFunctions.FetchWebData(url);
+                            break;
 
                         case "SendEmail":
                             var to = parametersElement.GetProperty("to").GetString();
                             var subject = parametersElement.GetProperty("subject").GetString();
                             var body = parametersElement.GetProperty("body").GetString();
-                            return ToolFunctions.SendEmail(to, subject, body);
+                            result = ToolFunctions.SendEmail(to, subject, body);
+                            break;
+                            
+                        default:
+                            result = "🤖 No matching tool found.";
+                            break;
                     }
+
+                    // Broadcast completion status
+                    if (!string.IsNullOrEmpty(connectionId))
+                    {
+                        await _hubContext.Clients.Client(connectionId).SendAsync("ReceiveStatus", "✅ Completed!");
+                    }
+
+                    return result;
                 }
             }
             catch (JsonException)
@@ -79,9 +115,15 @@ namespace AIChatBot.API.Services
             return "🤖 No matching tool found.";
         }
 
-        public async Task<string> RunAgentAsync(List<FunctionCallResult> functionCallResults)
+        public async Task<string> RunAgentAsync(List<FunctionCallResult> functionCallResults, string? connectionId = null)
         {
             var result = "";
+
+            // Broadcast executing status
+            if (!string.IsNullOrEmpty(connectionId) && functionCallResults.Any())
+            {
+                await _hubContext.Clients.Client(connectionId).SendAsync("ReceiveStatus", "🟢 Executing tools...");
+            }
 
             foreach (var functionCall in functionCallResults)
             {
@@ -110,6 +152,13 @@ namespace AIChatBot.API.Services
                     return $"🤖 Final Response:\n{functionCall.TextResponse}";
                 }
             }
+
+            // Broadcast completion status
+            if (!string.IsNullOrEmpty(connectionId) && functionCallResults.Any())
+            {
+                await _hubContext.Clients.Client(connectionId).SendAsync("ReceiveStatus", "✅ Completed!");
+            }
+
             return result ?? "🤖 No tool used. Here's my response.";
         }
 
