@@ -2,6 +2,7 @@ using AIChatBot.API.AIServices;
 using AIChatBot.API.Data;
 using AIChatBot.API.DataContext;
 using AIChatBot.API.Factory;
+using AIChatBot.API.Hubs;
 using AIChatBot.API.Interfaces.DataContext;
 using AIChatBot.API.Interfaces.Services;
 using AIChatBot.API.Models;
@@ -16,7 +17,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "AIChatBot API", Version = "v1" });
@@ -54,13 +54,18 @@ builder.Services.AddControllers()
     });
 
 builder.Services.AddMemoryCache();
+
+// Add SignalR
+builder.Services.AddSignalR();
+
 // Add CORS policy
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowLocalAngular",
         policy => policy.WithOrigins("http://localhost:4200", "https://localhost:4200", "https://aichatbot-hp.netlify.app")
                         .AllowAnyHeader()
-                        .AllowAnyMethod());
+                        .AllowAnyMethod()
+                        .AllowCredentials()); // Required for SignalR
 });
 
 var app = builder.Build();
@@ -71,7 +76,7 @@ AIChatBot.API.Services.ServiceProviderAccessor.ServiceProvider = app.Services;
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    // OpenAPI removed for .NET 8 compatibility
 }
 
 app.UseHttpsRedirection();
@@ -81,6 +86,9 @@ app.UseCors("AllowLocalAngular");
 app.UseAuthorization();
 
 app.MapControllers();
+
+// Map SignalR hub
+app.MapHub<ChatHub>("/chatHub");
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment() || app.Environment.IsStaging() || app.Environment.IsProduction())
 {

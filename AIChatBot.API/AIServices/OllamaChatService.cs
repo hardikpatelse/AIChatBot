@@ -1,6 +1,8 @@
-﻿using AIChatBot.API.Interfaces.Services;
+﻿using AIChatBot.API.Hubs;
+using AIChatBot.API.Interfaces.Services;
 using AIChatBot.API.Models;
 using AIChatBot.API.Services;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Options;
 using System.Text;
 using System.Text.Json;
@@ -13,19 +15,26 @@ namespace AIChatBot.API.AIServices
         private readonly ILogger<OllamaChatService> _logger;
         private readonly OllamaModelsApi _configurations;
         private readonly ToolsRegistryService _toolsRegistryService;
+        private readonly IHubContext<ChatHub> _hubContext;
 
-        public OllamaChatService(HttpClient httpClient, ILogger<OllamaChatService> logger, IOptions<OllamaModelsApi> options, ToolsRegistryService toolsRegistryService)
+        public OllamaChatService(HttpClient httpClient, ILogger<OllamaChatService> logger, IOptions<OllamaModelsApi> options, ToolsRegistryService toolsRegistryService, IHubContext<ChatHub> hubContext)
         {
             _httpClient = httpClient;
             _logger = logger;
             _configurations = options.Value;
             _toolsRegistryService = toolsRegistryService;
+            _hubContext = hubContext;
         }
 
-        public async Task<string> SendMessageAsync(string model, string message)
+        public async Task<string> SendMessageAsync(string model, string message, string connectionId)
         {
             try
             {
+                if (!string.IsNullOrEmpty(connectionId))
+                {
+                    await _hubContext.Clients.Client(connectionId).SendAsync("ReceiveStatus", "🟡 Thinking...");
+                }
+
                 var requestData = new
                 {
                     model = model,
@@ -39,7 +48,10 @@ namespace AIChatBot.API.AIServices
                 response.EnsureSuccessStatusCode();
 
                 var stream = await response.Content.ReadAsStringAsync();
-
+                if (!string.IsNullOrEmpty(connectionId))
+                {
+                    await _hubContext.Clients.Client(connectionId).SendAsync("ReceiveStatus", "🟡 Analyzing...");
+                }
                 return ConvertOllamaResponse(stream);
             }
             catch (Exception ex)
@@ -49,12 +61,16 @@ namespace AIChatBot.API.AIServices
             }
         }
 
-        public async Task<List<FunctionCallResult>> ChatWithFunctionSupportAsync(string model, List<Dictionary<string, string>> userMessage)
+        public async Task<List<FunctionCallResult>> ChatWithFunctionSupportAsync(string model, List<Dictionary<string, string>> userMessage, string connectionId)
         {
             var tools = _toolsRegistryService.GetToolSchemas();
             var functionCallResults = new List<FunctionCallResult>();
             try
             {
+                if (!string.IsNullOrEmpty(connectionId))
+                {
+                    await _hubContext.Clients.Client(connectionId).SendAsync("ReceiveStatus", "🟡 Thinking...");
+                }
                 var requestBody = new
                 {
                     model = model,
@@ -70,6 +86,11 @@ namespace AIChatBot.API.AIServices
 
                 var response = await _httpClient.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
+
+                if (!string.IsNullOrEmpty(connectionId))
+                {
+                    await _hubContext.Clients.Client(connectionId).SendAsync("ReceiveStatus", "🟡 Analyzing...");
+                }
 
                 functionCallResults = FunctionCallResultParser.ParseFunctionCallResults(json);
             }

@@ -1,12 +1,11 @@
 using AIChatBot.API.Data;
 using AIChatBot.API.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace AIChatBot.API.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class ModelsController : ControllerBase
     {
         

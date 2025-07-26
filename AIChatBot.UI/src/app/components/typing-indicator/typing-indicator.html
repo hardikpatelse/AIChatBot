@@ -1,5 +1,8 @@
 <div class="typing-indicator">
-    <span class="dot"></span>
-    <span class="dot"></span>
-    <span class="dot"></span>
+    <i *ngIf="status; else defaultIndicator">{{ status }}</i>
+    <ng-template #defaultIndicator>
+        <span class="dots"></span>
+        <span class="dots"></span>
+        <span class="dots"></span>
+    </ng-template>
 </div>

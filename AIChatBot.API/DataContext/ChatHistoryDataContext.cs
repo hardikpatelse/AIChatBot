@@ -23,18 +23,13 @@ namespace AIChatBot.API.DataContext
 
         }
 
-        public void SaveHistory(Guid userId, int chatSessionId, List<ChatMessage> messages)
+        public void SaveHistory(Guid userId, List<ChatMessage> messages)
         {
-            var session = _dbContext.ChatSessions.Include(s => s.Messages).FirstOrDefault(s => s.Id == chatSessionId);
-            if (session != null)
+            foreach (var msg in messages)
             {
-                foreach (var msg in messages)
-                {
-                    msg.ChatSessionId = chatSessionId;
-                    _dbContext.ChatMessages.Add(msg);
-                }
-                _dbContext.SaveChanges();
+                _dbContext.ChatMessages.Add(msg);
             }
+            _dbContext.SaveChanges();
         }
     }
 }

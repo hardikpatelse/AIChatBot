@@ -5,6 +5,6 @@ namespace AIChatBot.API.Interfaces.DataContext
     public interface IChatHistoryDataContext
     {
         ChatSession? GetHistory(Guid userId, Guid chatSessionIdentity);
-        void SaveHistory(Guid userId, int chatSessionId, List<ChatMessage> messages);
+        void SaveHistory(Guid userId, List<ChatMessage> messages);
     }
 }
