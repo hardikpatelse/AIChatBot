@@ -3,7 +3,6 @@ using System;
 using AIChatBot.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
@@ -12,50 +11,48 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AIChatBot.API.Migrations
 {
     [DbContext(typeof(ChatBotDbContext))]
-    [Migration("20250721143703_AddNameToChatSession")]
-    partial class AddNameToChatSession
+    [Migration("20250726172652_InitialCreateSqlite")]
+    partial class InitialCreateSqlite
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.7")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128);
-
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+            modelBuilder.HasAnnotation("ProductVersion", "9.0.7");
 
             modelBuilder.Entity("AIChatBot.API.Models.Entities.AIModel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Company")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("LogoUrl")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ModelName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("ReferenceLink")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("ReferralSource")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -68,6 +65,7 @@ namespace AIChatBot.API.Migrations
                             Company = "Microsoft",
                             Description = "Phi-3 is a family of lightweight 3B (Mini) and 14B (Medium) state-of-the-art open models by Microsoft.",
                             LogoUrl = "assets/images/model-icons/phi.png",
+                            ModelName = "phi3",
                             Name = "Phi-3 Mini",
                             ReferenceLink = "https://ollama.com/library/phi3:latest",
                             ReferralSource = "Ollama"
@@ -78,6 +76,7 @@ namespace AIChatBot.API.Migrations
                             Company = "Meta",
                             Description = "Meta Llama 3: The most capable openly available LLM to date.",
                             LogoUrl = "assets/images/model-icons/llama.png",
+                            ModelName = "llama3",
                             Name = "LLaMA 3",
                             ReferenceLink = "https://ollama.com/library/llama3:latest",
                             ReferralSource = "Ollama"
@@ -88,6 +87,7 @@ namespace AIChatBot.API.Migrations
                             Company = "Mistral AI",
                             Description = "The 7B model released by Mistral AI, updated to version 0.3.",
                             LogoUrl = "assets/images/model-icons/mistralai.png",
+                            ModelName = "mistral",
                             Name = "Mistral 7B",
                             ReferenceLink = "https://ollama.com/library/mistral:latest",
                             ReferralSource = "Ollama"
@@ -98,6 +98,7 @@ namespace AIChatBot.API.Migrations
                             Company = "Google",
                             Description = "Gemma is a family of lightweight, state-of-the-art open models built by Google DeepMind. Updated to version 1.1.",
                             LogoUrl = "assets/images/model-icons/gemma.png",
+                            ModelName = "gemma:2b",
                             Name = "Gemma",
                             ReferenceLink = "https://ollama.com/library/gemma:2b",
                             ReferralSource = "Ollama"
@@ -108,6 +109,7 @@ namespace AIChatBot.API.Migrations
                             Company = "DeepSeek",
                             Description = "DeepSeek V3, a 685B-parameter, mixture-of-experts model, is the latest iteration of the flagship chat model family from the DeepSeek team.\nIt succeeds the DeepSeek V3 model and performs really well on a variety of tasks.",
                             LogoUrl = "assets/images/model-icons/deepseek.png",
+                            ModelName = "deepseek/deepseek-chat-v3-0324:free",
                             Name = "DeepSeek v3",
                             ReferenceLink = "https://openrouter.ai/deepseek/deepseek-chat-v3-0324:free",
                             ReferralSource = "OpenRouter"
@@ -118,6 +120,7 @@ namespace AIChatBot.API.Migrations
                             Company = "Google",
                             Description = "Gemma 3 introduces multimodality, supporting vision-language input and text outputs. It handles context windows up to 128k tokens, understands over 140 languages, and offers improved math, reasoning, and chat capabilities, including structured outputs and function calling. Gemma 3 27B is Google's latest open source model, successor to Gemma 2.",
                             LogoUrl = "assets/images/model-icons/gemma.png",
+                            ModelName = "google/gemma-3-27b-it:free",
                             Name = "Gemma 3 27B",
                             ReferenceLink = "https://openrouter.ai/google/gemma-3-27b-it:free",
                             ReferralSource = "OpenRouter"
@@ -128,6 +131,7 @@ namespace AIChatBot.API.Migrations
                             Company = "Google",
                             Description = "Gemini Flash 2.0 offers a significantly faster time to first token (TTFT) compared to Gemini Flash 1.5, while maintaining quality on par with larger models like Gemini Pro 1.5. It introduces notable enhancements in multimodal understanding, coding capabilities, complex instruction following, and function calling. These advancements come together to deliver more seamless and robust agentic experiences.",
                             LogoUrl = "assets/images/model-icons/gemini.png",
+                            ModelName = "google/gemini-2.0-flash-exp:free",
                             Name = "Gemini Flash 2.0 - Limited",
                             ReferenceLink = "https://openrouter.ai/google/gemini-2.0-flash-exp:free",
                             ReferralSource = "OpenRouter"
@@ -138,6 +142,7 @@ namespace AIChatBot.API.Migrations
                             Company = "OpenAI",
                             Description = "GPT-3.5 Turbo is OpenAI's fastest model. It can understand and generate natural language or code, and is optimized for chat and traditional completion tasks.",
                             LogoUrl = "assets/images/model-icons/chatgpt.png",
+                            ModelName = "openai/gpt-3.5-turbo-0613",
                             Name = "GPT-3.5 Turbo",
                             ReferenceLink = "https://openrouter.ai/openai/gpt-3.5-turbo-0613",
                             ReferralSource = "OpenRouter"
@@ -148,6 +153,7 @@ namespace AIChatBot.API.Migrations
                             Company = "Google",
                             Description = "Gemini Flash 2.0 offers a significantly faster time to first token (TTFT) compared to Gemini Flash 1.5, while maintaining quality on par with larger models like Gemini Pro 1.5. It introduces notable enhancements in multimodal understanding, coding capabilities, complex instruction following, and function calling. These advancements come together to deliver more seamless and robust agentic experiences.",
                             LogoUrl = "assets/images/model-icons/gemini.png",
+                            ModelName = "google/gemini-2.0-flash-001",
                             Name = "Gemini Flash 2.0 - Unlimited",
                             ReferenceLink = "https://openrouter.ai/google/gemini-2.0-flash-001",
                             ReferralSource = "OpenRouter"
@@ -157,10 +163,10 @@ namespace AIChatBot.API.Migrations
             modelBuilder.Entity("AIChatBot.API.Models.Entities.AIModelChatMode", b =>
                 {
                     b.Property<int>("AIModelId")
-                        .HasColumnType("int");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("ChatModeId")
-                        .HasColumnType("int");
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("AIModelId", "ChatModeId");
 
@@ -281,27 +287,64 @@ namespace AIChatBot.API.Migrations
                         });
                 });
 
+            modelBuilder.Entity("AIChatBot.API.Models.Entities.AgentFile", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("ChatSessionId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("DownloadUrl")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("FilePath")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<long>("FileSize")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChatSessionId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AgentFiles");
+                });
+
             modelBuilder.Entity("AIChatBot.API.Models.Entities.ChatMessage", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("ChatSessionId")
-                        .HasColumnType("int");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Content")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Role")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("TimeStamp")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -314,17 +357,15 @@ namespace AIChatBot.API.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Mode")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -361,25 +402,20 @@ namespace AIChatBot.API.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("ModelId")
-                        .HasColumnType("int");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT");
 
                     b.Property<Guid>("UniqueIdentity")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("TEXT");
 
                     b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -392,15 +428,15 @@ namespace AIChatBot.API.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -424,6 +460,25 @@ namespace AIChatBot.API.Migrations
                     b.Navigation("AIModel");
 
                     b.Navigation("ChatMode");
+                });
+
+            modelBuilder.Entity("AIChatBot.API.Models.Entities.AgentFile", b =>
+                {
+                    b.HasOne("AIChatBot.API.Models.Entities.ChatSession", "ChatSession")
+                        .WithMany()
+                        .HasForeignKey("ChatSessionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AIChatBot.API.Models.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ChatSession");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("AIChatBot.API.Models.Entities.ChatMessage", b =>

@@ -23,7 +23,7 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 builder.Services.AddDbContext<ChatBotDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("ChatBotDb")));
+    options.UseSqlite(builder.Configuration.GetConnectionString("ChatBotDb")));
 builder.Services.AddSingleton<RetryFileOperationService>();
 
 builder.Services.Configure<OpenRouterModelsApi>(builder.Configuration.GetSection("OpenRouterModelsApi"));
@@ -34,6 +34,7 @@ builder.Services.Configure<ChatHistoryOptions>(builder.Configuration.GetSection(
 builder.Services.AddScoped<IChatHistoryDataContext, ChatHistoryDataContext>();
 builder.Services.AddScoped<IChatSessionDataContext, ChatSessionDataContext>();
 builder.Services.AddScoped<IUserDataContext, UserDataContext>();
+builder.Services.AddScoped<IAgentFileDataContext, AgentFileDataContext>();
 
 builder.Services.AddScoped<ChatModelServiceFactory>();
 builder.Services.AddScoped<IUserService, UserService>();
@@ -41,6 +42,7 @@ builder.Services.AddScoped<IModelService, ModelService>();
 builder.Services.AddScoped<IChatSessionServices, ChatSessionServices>();
 builder.Services.AddScoped<IChatHistoryService, ChatHistoryService>();
 builder.Services.AddScoped<IChatService, ChatService>();
+builder.Services.AddScoped<IFileService, FileService>();
 builder.Services.AddSingleton<MailService>();
 builder.Services.AddHttpClient<OllamaChatService>();
 builder.Services.AddHttpClient<OpenRouterChatService>();
