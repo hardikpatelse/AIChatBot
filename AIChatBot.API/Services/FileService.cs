@@ -34,8 +34,8 @@ namespace AIChatBot.API.Services
                 var fileInfo = new FileInfo(filePath);
                 var fileSize = fileInfo.Length;
                 
-                // Create download URL
-                var downloadUrl = $"/api/files/download/{fileName}"; // This will be updated with file ID after saving
+                // Create temporary download URL (will be updated after saving)
+                var downloadUrl = "/api/files/download/0"; 
                 
                 // Save file metadata to database
                 var agentFile = await _agentFileDataContext.CreateFileAsync(
@@ -48,6 +48,7 @@ namespace AIChatBot.API.Services
                 
                 // Update download URL with actual file ID
                 agentFile.DownloadUrl = $"/api/files/download/{agentFile.Id}";
+                await _agentFileDataContext.UpdateFileAsync(agentFile);
                 
                 return $"✅ File '{fileName}' created successfully. File ID: {agentFile.Id}";
             }

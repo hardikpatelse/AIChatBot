@@ -8,5 +8,6 @@ namespace AIChatBot.API.Interfaces.DataContext
         Task<List<AgentFile>> GetFilesBySessionAsync(int chatSessionId, Guid userId);
         Task<AgentFile?> GetFileByIdAsync(int fileId, Guid userId);
         Task<List<AgentFile>> GetFilesByUserAsync(Guid userId);
+        Task UpdateFileAsync(AgentFile agentFile);
     }
 }

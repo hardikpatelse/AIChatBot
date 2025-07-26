@@ -53,5 +53,11 @@ namespace AIChatBot.API.DataContext
                 .OrderByDescending(af => af.CreatedAt)
                 .ToListAsync();
         }
+
+        public async Task UpdateFileAsync(AgentFile agentFile)
+        {
+            _dbContext.AgentFiles.Update(agentFile);
+            await _dbContext.SaveChangesAsync();
+        }
     }
 }

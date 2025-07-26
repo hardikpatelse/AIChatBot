@@ -10,7 +10,7 @@
         </div>
         <!-- <app-model-details *ngIf="selectedModelDetails" [model]="selectedModelDetails"></app-model-details> -->
         <app-chat-session-list class="w-100" *ngIf="userObj?.chatSessions" [sessions]="userObj.chatSessions"
-            [selectedSession]="selectedSession" (sessionSelected)="onSessionSelected($event)"
+            [selectedSession]="selectedSession" [userId]="userId" (sessionSelected)="onSessionSelected($event)"
             (newChat)="onNewChat($event)"></app-chat-session-list>
     </aside>
 

@@ -1,0 +1,43 @@
+.session-files {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e9ecef;
+}
+
+.files-header h6 {
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.file-item {
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  transition: background-color 0.2s ease;
+}
+
+.file-item:hover {
+  background-color: #e9ecef;
+}
+
+.file-name {
+  font-size: 0.875rem;
+  color: #495057;
+}
+
+.file-details {
+  font-size: 0.75rem;
+}
+
+.btn-sm {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+}
+
+.alert-sm {
+  font-size: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.badge {
+  font-size: 0.7em;
+}

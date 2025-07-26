@@ -11,7 +11,8 @@ import { ChatSession } from '../../entities/chatsession'
 })
 export class ChatSessionListComponent {
     @Input() sessions: ChatSession[] = [];
-    @Input() selectedSession?: ChatSession
+    @Input() selectedSession?: ChatSession;
+    @Input() userId?: string;
     @Output() sessionSelected = new EventEmitter<ChatSession>();
     @Output() newChat = new EventEmitter<void>();
 

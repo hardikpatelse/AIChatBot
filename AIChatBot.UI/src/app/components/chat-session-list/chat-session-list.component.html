@@ -14,4 +14,12 @@
             No sessions found.
         </li>
     </ul>
+    
+    <!-- Session Files Section -->
+    <div class="session-files-container" *ngIf="selectedSession && userId">
+        <app-session-files 
+            [selectedSession]="selectedSession" 
+            [userId]="userId">
+        </app-session-files>
+    </div>
 </div>

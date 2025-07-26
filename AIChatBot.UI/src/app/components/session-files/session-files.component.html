@@ -1,0 +1,43 @@
+<div class="session-files" *ngIf="selectedSession">
+  <div class="files-header d-flex align-items-center justify-content-between mb-2">
+    <h6 class="mb-0 text-muted">
+      <i class="fa fa-file me-1"></i>
+      Session Files
+    </h6>
+    <span class="badge bg-secondary" *ngIf="files.length > 0">{{ files.length }}</span>
+  </div>
+
+  <div *ngIf="isLoading" class="text-center text-muted py-2">
+    <small>Loading files...</small>
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-warning alert-sm py-1 px-2 mb-2">
+    <small>{{ errorMessage }}</small>
+  </div>
+
+  <div *ngIf="!isLoading && files.length === 0 && !errorMessage" class="text-center text-muted py-2">
+    <small>No files in this session</small>
+  </div>
+
+  <div class="files-list" *ngIf="files.length > 0">
+    <div *ngFor="let file of files" 
+         class="file-item d-flex align-items-center justify-content-between p-2 mb-1 border rounded bg-light">
+      <div class="file-info flex-grow-1" style="min-width: 0;">
+        <div class="file-name text-truncate fw-bold" [title]="file.fileName">
+          <i class="fa fa-file-text-o me-1"></i>
+          {{ file.fileName }}
+        </div>
+        <div class="file-details">
+          <small class="text-muted">
+            {{ formatFileSize(file.fileSize) }} • {{ formatDate(file.createdAt) }}
+          </small>
+        </div>
+      </div>
+      <button class="btn btn-outline-primary btn-sm ms-2" 
+              (click)="downloadFile(file)"
+              [title]="'Download ' + file.fileName">
+        <i class="fa fa-download"></i>
+      </button>
+    </div>
+  </div>
+</div>
