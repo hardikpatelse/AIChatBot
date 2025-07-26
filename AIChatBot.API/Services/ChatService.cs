@@ -1,8 +1,10 @@
 ﻿using AIChatBot.API.Factory;
+using AIChatBot.API.Hubs;
 using AIChatBot.API.Interfaces.Services;
 using AIChatBot.API.Models;
 using AIChatBot.API.Models.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -15,19 +17,22 @@ namespace AIChatBot.API.Services
         private readonly AgentService _agentService;
         private readonly IChatSessionServices _chatSessionServices;
         private readonly IModelService _modelService;
+        private readonly IHubContext<ChatHub> _hubContext;
 
         public ChatService(
             IChatHistoryService chatHistoryService,
             ChatModelServiceFactory factory,
             AgentService agentService,
             IChatSessionServices chatSessionServices,
-            IModelService modelService)
+            IModelService modelService,
+            IHubContext<ChatHub> hubContext)
         {
             _chatHistoryService = chatHistoryService;
             _factory = factory;
             _agentService = agentService;
             _chatSessionServices = chatSessionServices;
             _modelService = modelService;
+            _hubContext = hubContext;
         }
 
         public IActionResult GetHistory(Guid userId, Guid chatSessionIdentity)
@@ -52,7 +57,7 @@ namespace AIChatBot.API.Services
                 }
             };
 
-            _chatHistoryService.SaveHistory(request.UserId, sessionWithoutMessages.Id, messages);
+            _chatHistoryService.SaveHistory(request.UserId, messages);
 
             string responseText = string.Empty;
             bool saveHistory = true;
@@ -61,7 +66,7 @@ namespace AIChatBot.API.Services
             {
                 var prompt = preparePrompt(request.Message);
                 var service = _factory.GetService(selectedModel.ModelName);
-                var aiResponse = await service.SendMessageAsync(selectedModel.ModelName, prompt);
+                var aiResponse = await service.SendMessageAsync(selectedModel.ModelName, prompt, request.ConnectionId);
                 responseText = await _agentService.RunToolAsync(aiResponse, request.ConnectionId);
             }
             else if (request.AIMode == "agent")
@@ -72,7 +77,7 @@ namespace AIChatBot.API.Services
                 {
                     new() { ["role"] = "user", ["content"] = request.Message }
                 };
-                var response = await service.ChatWithFunctionSupportAsync(selectedModel.ModelName, msgObject);
+                var response = await service.ChatWithFunctionSupportAsync(selectedModel.ModelName, msgObject, request.ConnectionId);
                 responseText = await _agentService.RunAgentAsync(response, request.ConnectionId);
             }
             else if (request.AIMode == "planner")
@@ -90,7 +95,7 @@ namespace AIChatBot.API.Services
                         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
                     });
 
-                    var response = await service.ChatWithFunctionSupportAsync(selectedModel.ModelName, msgObject);
+                    var response = await service.ChatWithFunctionSupportAsync(selectedModel.ModelName, msgObject, request.ConnectionId);
 
                     var responseJson = JsonSerializer.Serialize(response, new JsonSerializerOptions
                     {
@@ -117,12 +122,19 @@ namespace AIChatBot.API.Services
                         new ChatMessage
                         {
                             Role = "assistant",
+                            ChatSessionId = sessionWithoutMessages.Id,
                             Content = iterationResponse,
                             TimeStamp = DateTime.UtcNow
                         }
                     };
 
-                    _chatHistoryService.SaveHistory(request.UserId, sessionWithoutMessages.Id, messages);
+                    foreach (var msg in messages.Where(m => m.Role == "assistant"))
+                    {
+                        // Send the message to the client via SignalR
+                        _hubContext.Clients.Client(request.ConnectionId).SendAsync("ReceiveMessage", msg);
+                    }
+
+                    _chatHistoryService.SaveHistory(request.UserId, messages);
 
                     responseText += $"Recursion Step: {step} \n" + iterationResponse;
                 }
@@ -135,7 +147,7 @@ namespace AIChatBot.API.Services
             else
             {
                 var service = _factory.GetService(selectedModel.ModelName);
-                responseText = await service.SendMessageAsync(selectedModel.ModelName, request.Message);
+                responseText = await service.SendMessageAsync(selectedModel.ModelName, request.Message, request.ConnectionId);
             }
 
             if (saveHistory)
@@ -145,14 +157,19 @@ namespace AIChatBot.API.Services
                     new ChatMessage
                     {
                         Role = "assistant",
+                        ChatSessionId = sessionWithoutMessages.Id,
                         Content = responseText,
                         TimeStamp = DateTime.UtcNow
                     }
                 };
 
-                _chatHistoryService.SaveHistory(request.UserId, sessionWithoutMessages.Id, messages);
+                _chatHistoryService.SaveHistory(request.UserId, messages);
+                return new OkObjectResult(new ChatResponse { ShowInHistory = true, Response = responseText });
             }
-            return new OkObjectResult(new ChatResponse { Response = responseText });
+            else
+            {
+                return new OkObjectResult(new ChatResponse { ShowInHistory = false, Response = responseText });
+            }
         }
 
         private string preparePrompt(string userInput)

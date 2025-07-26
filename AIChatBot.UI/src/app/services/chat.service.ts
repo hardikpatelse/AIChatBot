@@ -1,14 +1,16 @@
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
-import { Observable } from 'rxjs/internal/Observable'
+// Removed duplicate import
+import { Observable } from 'rxjs'
 import { Model } from '../entities/model'
 import { ChatHistoryResponse } from '../entities/chat-history'
+import { environment } from '../../environments/environment'
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChatService {
-  private apiUrl = 'https://localhost:7154';
+  private apiUrl = environment.apiBaseUrl + '/api';
 
   constructor(private http: HttpClient) { }
 
@@ -21,10 +23,10 @@ export class ChatService {
   }
 
   sendMessage(userId: string, chatSessionIdentity: string, modelId: number, message: string, aIMode: string, connectionId?: string): Observable<any> {
-    const payload: any = { userId, chatSessionIdentity, modelId, message, aIMode };
+    const payload: any = { userId, chatSessionIdentity, modelId, message, aIMode }
     if (connectionId) {
-      payload.connectionId = connectionId;
+      payload.connectionId = connectionId
     }
-    return this.http.post<any>(`${this.apiUrl}/chat`, payload);
+    return this.http.post<any>(`${this.apiUrl}/chat`, payload)
   }
 }

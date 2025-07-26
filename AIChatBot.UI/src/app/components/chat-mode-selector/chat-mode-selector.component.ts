@@ -17,9 +17,8 @@ interface ChatModeOption {
 })
 export class ChatModeSelectorComponent {
     @Input() supportedModes: AIModelChatMode[] = [];
+    @Input() selectedMode: string = 'chat';
     @Output() modeSelected = new EventEmitter<string>();
-
-    selectedMode: string = 'chat';
 
     constructor() {
 

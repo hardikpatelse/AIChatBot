@@ -35,9 +35,9 @@ namespace AIChatBot.API.Services
         }
 
         // Save history (add messages to a session)
-        public void SaveHistory(Guid userId, int chatSessionId, List<ChatMessage> messages)
+        public void SaveHistory(Guid userId, List<ChatMessage> messages)
         {
-            _chatHistoryDataContext.SaveHistory(userId, chatSessionId, messages);
+            _chatHistoryDataContext.SaveHistory(userId, messages);
         }
     }
 }

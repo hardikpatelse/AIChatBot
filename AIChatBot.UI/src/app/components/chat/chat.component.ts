@@ -7,6 +7,7 @@ import { marked } from 'marked'
 import { User } from '../../entities/user'
 import { AIModelChatMode } from '../../entities/aimodel-chatmode'
 import { ChatSession } from '../../entities/chatsession'
+import { Subscription } from 'rxjs/internal/Subscription'
 
 @Component({
   selector: 'app-chat',
@@ -31,6 +32,9 @@ export class Chat implements OnInit, OnDestroy {
   userName: string = '';
   showNewChatModal: boolean = false;
   statusMessages: string[] = [];
+  connectionId?: string | null
+
+  private messageSub?: Subscription
 
   constructor(private chatService: ChatService, private signalRService: SignalRService, private cdr: ChangeDetectorRef) { }
 
@@ -43,19 +47,29 @@ export class Chat implements OnInit, OnDestroy {
         this.errorMessage = 'Failed to load models.'
       }
     })
+    this.messageSub = this.signalRService.message$.subscribe(message => {
+      if (message) {
+        this.chatHistory.push(message)
+        this.cdr.detectChanges() // Ensure view updates with new message
+      }
+    })
   }
 
   ngOnDestroy(): void {
-    this.signalRService.stopConnection();
+    this.signalRService.stopConnection()
+    this.messageSub?.unsubscribe()
   }
 
   // Initialize SignalR status update callback
   initializeSignalR(): void {
     this.signalRService.statusUpdateCallback = (status: string) => {
-      console.log("Status update received:", status);
-      this.statusMessages.push(status);
-      this.cdr.detectChanges();
-    };
+      this.statusMessages.push(status)
+      this.cdr.detectChanges()
+    }
+    this.signalRService.messageUpdateCallback = (message: ChatMessage) => {
+      this.chatHistory.push(message)
+      this.cdr.detectChanges()
+    }
   }
 
   onModelChange(model: Model): void {
@@ -69,11 +83,17 @@ export class Chat implements OnInit, OnDestroy {
       this.chatModes = (this.selectedModelDetails && Array.isArray((this.selectedModelDetails as any).chatModes))
         ? (this.selectedModelDetails as any).chatModes
         : []
+      const savedMode = localStorage.getItem('selectedChatMode')
+      if (savedMode && this.chatModes.some(opt => opt.chatMode.mode === savedMode)) {
+        this.selectedChatMode = savedMode
+      }
     }
   }
 
   loadHistory(): void {
     if (!this.userId || !this.chatSessionIdentity) return
+    // Get SignalR connection ID
+    this.connectionId = this.signalRService.getConnectionId()
     this.chatService.getHistory(this.userId, this.chatSessionIdentity, this.selectedModelId).subscribe({
       next: (session: ChatHistoryResponse) => {
         this.selectedSession = session
@@ -100,29 +120,28 @@ export class Chat implements OnInit, OnDestroy {
     this.userMessage = ''
     this.isLoading = true
     this.errorMessage = ''
-    
     // Clear previous status messages
-    this.statusMessages = [];
-    
-    // Get SignalR connection ID
-    const connectionId = this.signalRService.getConnectionId();
-    
-    this.chatService.sendMessage(this.userId, this.chatSessionIdentity, this.selectedModelId, msg, this.selectedChatMode, connectionId || undefined).subscribe({
+    this.statusMessages = []
+
+    this.chatService.sendMessage(this.userId, this.chatSessionIdentity, this.selectedModelId, msg, this.selectedChatMode, this.connectionId || undefined).subscribe({
       next: res => {
-        this.chatHistory.push({
-          role: 'assistant', content: res.response, timeStamp: new Date().toISOString(),
-          id: 0,
-          chatSessionId: this.selectedSession?.id || 0
-        })
+        if (res.showInChat) {
+          this.chatHistory.push({
+            role: 'assistant', content: res.response, timeStamp: new Date().toISOString(),
+            id: 0,
+            chatSessionId: this.selectedSession?.id || 0
+          })
+        }
         this.isLoading = false
         // Clear status messages after completion
-        this.statusMessages = [];
+        this.statusMessages = []
+        this.cdr.detectChanges() // Ensure view updates after loading history
       },
       error: () => {
         this.errorMessage = 'Failed to send message to server.'
         this.isLoading = false
         // Clear status messages on error
-        this.statusMessages = [];
+        this.statusMessages = []
       }
     })
   }
@@ -147,10 +166,10 @@ export class Chat implements OnInit, OnDestroy {
       this.showNewChatModal = true
     }
     // Optionally set chatSessionIdentity or other properties here
-    
+
     // Start SignalR connection and initialize callbacks
     if (this.userId) {
-      this.signalRService.startConnection(this.userId);
+      this.signalRService.startConnection(this.userId)
     }
   }
 
@@ -163,7 +182,6 @@ export class Chat implements OnInit, OnDestroy {
 
   onNewChat(session: any) {
     this.showNewChatModal = true
-    console.log('New chat session requested:', session)
     // Optionally handle session info if needed
   }
 

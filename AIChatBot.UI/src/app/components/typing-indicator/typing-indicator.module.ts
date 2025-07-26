@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core'
 import { CommonModule } from '@angular/common'
-import { TypingIndicator } from './typing-indicator'
+import { TypingIndicatorComponent } from './typing-indicator'
 
 @NgModule({
-    declarations: [TypingIndicator],
+    declarations: [TypingIndicatorComponent],
     imports: [CommonModule],
-    exports: [TypingIndicator]
+    exports: [TypingIndicatorComponent]
 })
 export class TypingIndicatorModule { }

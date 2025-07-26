@@ -4,11 +4,6 @@ namespace AIChatBot.API.Hubs
 {
     public class ChatHub : Hub
     {
-        public async Task SendStatusUpdate(string connectionId, string status)
-        {
-            await Clients.Client(connectionId).SendAsync("ReceiveStatus", status);
-        }
-
         public override async Task OnConnectedAsync()
         {
             Console.WriteLine($"SignalR Client connected: {Context.ConnectionId}");

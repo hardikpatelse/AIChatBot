@@ -4,7 +4,7 @@
     <!-- Side Panel -->
     <aside class="side-panel bg-light border-end p-3 d-flex flex-column align-items-center">
         <div class="side-panel-header w-100 mb-3">
-            <app-chat-mode-selector (modeSelected)="onModeSelected($event)"
+            <app-chat-mode-selector (modeSelected)="onModeSelected($event)" [selectedMode]="selectedChatMode"
                 [supportedModes]="chatModes || []"></app-chat-mode-selector>
             <app-model-selector (modelSelected)="onModelChange($event)"></app-model-selector>
         </div>

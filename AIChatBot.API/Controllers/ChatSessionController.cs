@@ -1,7 +1,5 @@
-﻿using AIChatBot.API.Interfaces.DataContext;
-using AIChatBot.API.Interfaces.Services;
+﻿using AIChatBot.API.Interfaces.Services;
 using AIChatBot.API.Models.Requests;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AIChatBot.API.Controllers

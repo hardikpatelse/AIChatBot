@@ -1,23 +1,23 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing'
 
-import { TypingIndicator } from './typing-indicator';
+import { TypingIndicatorComponent } from './typing-indicator'
 
-describe('TypingIndicator', () => {
-  let component: TypingIndicator;
-  let fixture: ComponentFixture<TypingIndicator>;
+describe('TypingIndicatorComponent', () => {
+  let component: TypingIndicatorComponent
+  let fixture: ComponentFixture<TypingIndicatorComponent>
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TypingIndicator]
+      imports: [TypingIndicatorComponent]
     })
-    .compileComponents();
+      .compileComponents()
 
-    fixture = TestBed.createComponent(TypingIndicator);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    fixture = TestBed.createComponent(TypingIndicatorComponent)
+    component = fixture.componentInstance
+    fixture.detectChanges()
+  })
 
   it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-});
+    expect(component).toBeTruthy()
+  })
+})

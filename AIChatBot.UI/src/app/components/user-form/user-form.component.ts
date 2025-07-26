@@ -27,11 +27,9 @@ export class UserFormComponent implements OnInit {
         // this.submitted = true
         if (this.userForm.valid) {
             if (this.user) {
-                console.log('User already exists:', this.user)
                 this.userSubmitted.emit(this.user)
             } else {
                 const { name, email } = this.userForm.value
-                console.log('Registering user:', { name, email })
                 this.userService.registerUser(name, email).subscribe({
                     next: (user) => {
                         this.user = user

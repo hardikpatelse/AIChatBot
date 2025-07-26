@@ -120,13 +120,13 @@ namespace AIChatBot.API.Services
             var result = "";
 
             // Broadcast executing status
-            if (!string.IsNullOrEmpty(connectionId) && functionCallResults.Any())
-            {
-                await _hubContext.Clients.Client(connectionId).SendAsync("ReceiveStatus", "🟢 Executing tools...");
-            }
 
             foreach (var functionCall in functionCallResults)
             {
+                if (!string.IsNullOrEmpty(connectionId) && functionCallResults.Any())
+                {
+                    await _hubContext.Clients.Client(connectionId).SendAsync("ReceiveStatus", $"🟢 Executing tool {functionCall.FunctionName}");
+                }
                 if (!string.IsNullOrEmpty(functionCall.FunctionName) && !string.IsNullOrEmpty(functionCall.ArgumentsJson))
                 {
                     try
