@@ -8,6 +8,7 @@ namespace AIChatBot.API.Services
     {
         private readonly IAgentFileDataContext _agentFileDataContext;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly string _baseFilePath = Path.Combine("AgentFiles");
 
         public FileService(IAgentFileDataContext agentFileDataContext, IHttpContextAccessor httpContextAccessor)
         {
