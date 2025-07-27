@@ -84,7 +84,9 @@ namespace AIChatBot.API.Services
             {
                 var service = _factory.GetService(selectedModel.ModelName);
                 var funcExecLog = new List<FunctionCallResult>();
-                for (int step = 0; step < 5; step++) // Limit recursion
+                var isDone = false;
+                var step = 0;
+                do
                 {
                     var msgObject = preparePlannerPrompt(request, step, funcExecLog);
 
@@ -105,6 +107,7 @@ namespace AIChatBot.API.Services
                     Console.WriteLine(responseJson);
                     if (!response.Any(a => !string.IsNullOrWhiteSpace(a.FunctionName)))
                     {
+                        isDone = true;
                         break;
                     }
                     var iterationResponse = await _agentService.RunAgentAsync(response, request.UserId, sessionWithoutMessages.Id, request.ConnectionId);
@@ -131,13 +134,17 @@ namespace AIChatBot.API.Services
                     foreach (var msg in messages.Where(m => m.Role == "assistant"))
                     {
                         // Send the message to the client via SignalR
-                        _hubContext.Clients.Client(request.ConnectionId).SendAsync("ReceiveMessage", msg);
+                        if (!string.IsNullOrEmpty(request.ConnectionId))
+                        {
+                            await _hubContext.Clients.Client(request.ConnectionId).SendAsync("ReceiveMessage", msg);
+                        }
                     }
 
                     _chatHistoryService.SaveHistory(request.UserId, messages);
 
                     responseText += $"Recursion Step: {step} \n" + iterationResponse;
-                }
+                    step++;
+                } while (!isDone);
                 saveHistory = false; // Don't save history for planner mode
                 if (string.IsNullOrWhiteSpace(responseText))
                 {

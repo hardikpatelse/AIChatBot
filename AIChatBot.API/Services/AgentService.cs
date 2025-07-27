@@ -107,10 +107,10 @@ namespace AIChatBot.API.Services
         {
             var result = "";
 
-            // Broadcast executing status
 
             foreach (var functionCall in functionCallResults)
             {
+                // Broadcast executing status
                 if (!string.IsNullOrEmpty(connectionId) && functionCallResults.Any())
                 {
                     await _hubContext.Clients.Client(connectionId).SendAsync("ReceiveStatus", $"🟢 Executing tool {functionCall.FunctionName}");
@@ -127,22 +127,25 @@ namespace AIChatBot.API.Services
                                 var filename = args.GetProperty("filename").GetString()!;
                                 var content = args.GetProperty("content").GetString()!;
                                 toolResult = await _fileService.CreateFileAsync(filename, content, userId, chatSessionId);
+                                result += $"✅ Tool `{functionCall.FunctionName}` executed:\n{toolResult}\n";
                                 break;
                             case "FetchWebData":
                                 var url = args.GetProperty("url").GetString()!;
                                 toolResult = ToolFunctions.FetchWebData(url);
+                                result += $"✅ Tool `{functionCall.FunctionName}` executed:\n{toolResult}\n";
                                 break;
                             case "SendEmail":
                                 var to = args.GetProperty("to").GetString()!;
                                 var subject = args.GetProperty("subject").GetString()!;
                                 var body = args.GetProperty("body").GetString()!;
                                 toolResult = ToolFunctions.SendEmail(to, subject, body);
+                                result += $"✅ Tool `{functionCall.FunctionName}` executed:\n{toolResult}\n";
                                 break;
                             default:
                                 toolResult = $"❌ Unknown tool: {functionCall.FunctionName}";
+                                result += $"\n{toolResult}\n";
                                 break;
                         }
-                        result += $"✅ Tool `{functionCall.FunctionName}` executed:\n{toolResult}\n";
                     }
                     catch (Exception ex)
                     {
