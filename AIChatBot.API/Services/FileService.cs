@@ -28,8 +28,15 @@ namespace AIChatBot.API.Services
                 Directory.CreateDirectory(sessionDir);
 
                 // Create full file path
+                // Validate and sanitize the fileName to prevent path traversal
+                fileName = SanitizeFileName(fileName);
                 var filePath = Path.Combine(sessionDir, fileName);
 
+                // Ensure the resolved filePath is within the intended directory
+                if (!filePath.StartsWith(sessionDir))
+                {
+                    throw new UnauthorizedAccessException("Invalid file name or path traversal attempt detected.");
+                }
                 // Write file content
                 await File.WriteAllTextAsync(filePath, content);
 
