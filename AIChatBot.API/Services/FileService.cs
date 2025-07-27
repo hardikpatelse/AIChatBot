@@ -96,13 +96,12 @@ namespace AIChatBot.API.Services
                 return null;
             }
 
-            using (var fileStream = new FileStream(agentFile.FilePath, FileMode.Open, FileAccess.Read, FileShare.Read))
-            {
-                var memoryStream = new MemoryStream();
-                await fileStream.CopyToAsync(memoryStream);
-                memoryStream.Position = 0; // Reset the position to the beginning of the stream
-                return memoryStream;
-            }
+            var fileStream = new FileStream(agentFile.FilePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+            var memoryStream = new MemoryStream();
+            await fileStream.CopyToAsync(memoryStream);
+            memoryStream.Position = 0; // Reset the position to the beginning of the stream
+            fileStream.Dispose(); // Dispose the FileStream after copying
+            return memoryStream;
         }
     }
 }
