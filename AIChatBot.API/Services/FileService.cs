@@ -28,8 +28,15 @@ namespace AIChatBot.API.Services
                 Directory.CreateDirectory(sessionDir);
 
                 // Create full file path
+                // Validate and sanitize the fileName to prevent path traversal
+                fileName = SanitizeFileName(fileName);
                 var filePath = Path.Combine(sessionDir, fileName);
 
+                // Ensure the resolved filePath is within the intended directory
+                if (!filePath.StartsWith(sessionDir))
+                {
+                    throw new UnauthorizedAccessException("Invalid file name or path traversal attempt detected.");
+                }
                 // Write file content
                 await File.WriteAllTextAsync(filePath, content);
 
@@ -63,7 +70,7 @@ namespace AIChatBot.API.Services
                     baseUrl = $"{request.Scheme}://{request.Host}{request.PathBase}";
                 }
 
-                return $"✅ File '{fileName}' created successfully. Download the file from <a href='{baseUrl}/api/Files/download/{agentFile.Id}'>here</a>.";
+                return $"✅ File '{fileName}' created successfully. Download the file from <a href='{baseUrl}/api/files/download/{agentFile.Id}'>here</a>.";
             }
             catch (Exception ex)
             {
