@@ -55,7 +55,8 @@ namespace AIChatBot.API.Data
                 new ChatMode { Id = 1, Mode = "chat", Name = "Chat" },
                 new ChatMode { Id = 2, Mode = "tools", Name = "Tools" },
                 new ChatMode { Id = 3, Mode = "agent", Name = "Agent" },
-                new ChatMode { Id = 4, Mode = "planner", Name = "Agent with Planning" }
+                new ChatMode { Id = 4, Mode = "planner", Name = "Agent with Planning" },
+                new ChatMode { Id = 5, Mode = "rag", Name = "Knowledge-Based (RAG)" }
             );
 
             // Seed AIModels
