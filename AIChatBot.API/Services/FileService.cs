@@ -20,7 +20,7 @@ namespace AIChatBot.API.Services
             try
             {
                 // Create directory structure: AgentFiles/[USER_ID]/[SESSION_ID]
-                var userDir = Path.Combine("AgentFiles", userId.ToString());
+                var userDir = Path.Combine(_baseFilePath, userId.ToString());
                 var sessionDir = Path.Combine(userDir, chatSessionId.ToString());
 
                 // Ensure directories exist
