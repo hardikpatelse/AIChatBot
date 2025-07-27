@@ -20,7 +20,7 @@ namespace AIChatBot.API.Services
             try
             {
                 // Create directory structure: AgentFiles/[USER_ID]/[SESSION_ID]
-                var userDir = Path.Combine("AgentFiles", userId.ToString());
+                var userDir = Path.Combine(_baseFilePath, userId.ToString());
                 var sessionDir = Path.Combine(userDir, chatSessionId.ToString());
 
                 // Ensure directories exist
@@ -56,8 +56,11 @@ namespace AIChatBot.API.Services
                 // Get the current base URL from the request context if available
                 var baseUrl = string.Empty;
 
-                var request = _httpContextAccessor.HttpContext.Request;
-                baseUrl = request != null ? $"{request.Scheme}://{request.Host}{request.PathBase}" : "";
+                if (_httpContextAccessor.HttpContext != null)
+                {
+                    var request = _httpContextAccessor.HttpContext.Request;
+                    baseUrl = $"{request.Scheme}://{request.Host}{request.PathBase}";
+                }
 
                 return $"✅ File '{fileName}' created successfully. Download the file from <a href='{baseUrl}/api/Files/download/{agentFile.Id}'>here</a>.";
             }
