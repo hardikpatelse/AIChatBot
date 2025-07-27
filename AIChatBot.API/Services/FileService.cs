@@ -70,7 +70,7 @@ namespace AIChatBot.API.Services
                     baseUrl = $"{request.Scheme}://{request.Host}{request.PathBase}";
                 }
 
-                return $"✅ File '{fileName}' created successfully. Download the file from <a href='{baseUrl}/api/Files/download/{agentFile.Id}'>here</a>.";
+                return $"✅ File '{fileName}' created successfully. Download the file from <a href='{baseUrl}/api/files/download/{agentFile.Id}'>here</a>.";
             }
             catch (Exception ex)
             {
