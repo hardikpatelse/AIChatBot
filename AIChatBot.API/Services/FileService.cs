@@ -33,7 +33,9 @@ namespace AIChatBot.API.Services
                 var filePath = Path.Combine(sessionDir, fileName);
 
                 // Ensure the resolved filePath is within the intended directory
-                if (!filePath.StartsWith(sessionDir))
+                var fullFilePath = Path.GetFullPath(filePath);
+                var fullSessionDir = Path.GetFullPath(sessionDir);
+                if (!fullFilePath.StartsWith(fullSessionDir))
                 {
                     throw new UnauthorizedAccessException("Invalid file name or path traversal attempt detected.");
                 }
