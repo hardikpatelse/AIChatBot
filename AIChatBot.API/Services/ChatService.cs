@@ -86,8 +86,14 @@ namespace AIChatBot.API.Services
                 var funcExecLog = new List<FunctionCallResult>();
                 var isDone = false;
                 var step = 0;
+                const int MaxIterations = 10; // Maximum allowed iterations to prevent infinite loops
                 do
                 {
+                    if (step >= MaxIterations)
+                    {
+                        Console.WriteLine("⚠️ Maximum iteration limit reached in planner mode.");
+                        break;
+                    }
                     var msgObject = preparePlannerPrompt(request, step, funcExecLog);
 
                     //Serialize the message object for logging
