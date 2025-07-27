@@ -67,7 +67,7 @@ namespace AIChatBot.API.Services
                 var prompt = preparePrompt(request.Message);
                 var service = _factory.GetService(selectedModel.ModelName);
                 var aiResponse = await service.SendMessageAsync(selectedModel.ModelName, prompt, request.ConnectionId);
-                responseText = await _agentService.RunToolAsync(aiResponse, request.ConnectionId);
+                responseText = await _agentService.RunToolAsync(aiResponse, request.UserId, sessionWithoutMessages.Id, request.ConnectionId);
             }
             else if (request.AIMode == "agent")
             {
@@ -78,7 +78,7 @@ namespace AIChatBot.API.Services
                     new() { ["role"] = "user", ["content"] = request.Message }
                 };
                 var response = await service.ChatWithFunctionSupportAsync(selectedModel.ModelName, msgObject, request.ConnectionId);
-                responseText = await _agentService.RunAgentAsync(response, request.ConnectionId);
+                responseText = await _agentService.RunAgentAsync(response, request.UserId, sessionWithoutMessages.Id, request.ConnectionId);
             }
             else if (request.AIMode == "planner")
             {
@@ -107,7 +107,7 @@ namespace AIChatBot.API.Services
                     {
                         break;
                     }
-                    var iterationResponse = await _agentService.RunAgentAsync(response, request.ConnectionId);
+                    var iterationResponse = await _agentService.RunAgentAsync(response, request.UserId, sessionWithoutMessages.Id, request.ConnectionId);
                     foreach (var funcCall in response.Where(a => !string.IsNullOrWhiteSpace(a.FunctionName)))
                     {
                         funcExecLog.Add(new FunctionCallResult()

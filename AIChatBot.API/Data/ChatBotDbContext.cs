@@ -11,6 +11,7 @@ namespace AIChatBot.API.Data
         public DbSet<AIModel> AIModels { get; set; }
         public DbSet<ChatMode> ChatModes { get; set; }
         public DbSet<AIModelChatMode> AIModelChatModes { get; set; }
+        public DbSet<AgentFile> AgentFiles { get; set; }
 
         public ChatBotDbContext(DbContextOptions<ChatBotDbContext> options) : base(options) { }
 
@@ -26,6 +27,16 @@ namespace AIChatBot.API.Data
                 .HasMany(u => u.ChatSessions)
                 .WithOne()
                 .HasForeignKey(c => c.UserId);
+
+            modelBuilder.Entity<AgentFile>()
+                .HasOne(af => af.User)
+                .WithMany()
+                .HasForeignKey(af => af.UserId);
+
+            modelBuilder.Entity<AgentFile>()
+                .HasOne(af => af.ChatSession)
+                .WithMany()
+                .HasForeignKey(af => af.ChatSessionId);
 
             modelBuilder.Entity<AIModelChatMode>()
                 .HasKey(am => new { am.AIModelId, am.ChatModeId });
