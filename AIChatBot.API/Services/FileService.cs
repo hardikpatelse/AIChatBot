@@ -56,8 +56,11 @@ namespace AIChatBot.API.Services
                 // Get the current base URL from the request context if available
                 var baseUrl = string.Empty;
 
-                var request = _httpContextAccessor.HttpContext.Request;
-                baseUrl = request != null ? $"{request.Scheme}://{request.Host}{request.PathBase}" : "";
+                if (_httpContextAccessor.HttpContext != null)
+                {
+                    var request = _httpContextAccessor.HttpContext.Request;
+                    baseUrl = $"{request.Scheme}://{request.Host}{request.PathBase}";
+                }
 
                 return $"✅ File '{fileName}' created successfully. Download the file from <a href='{baseUrl}/api/Files/download/{agentFile.Id}'>here</a>.";
             }
