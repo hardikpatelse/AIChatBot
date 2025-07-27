@@ -103,5 +103,16 @@ namespace AIChatBot.API.Services
             fileStream.Dispose(); // Dispose the FileStream after copying
             return memoryStream;
         }
+        // Add this private method to the FileService class
+
+        private static string SanitizeFileName(string fileName)
+        {
+            // Remove invalid file name characters
+            foreach (var c in Path.GetInvalidFileNameChars())
+            {
+                fileName = fileName.Replace(c, '_');
+            }
+            return fileName;
+        }
     }
 }
