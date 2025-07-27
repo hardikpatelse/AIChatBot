@@ -1,4 +1,5 @@
 ﻿using AIChatBot.API.Hubs;
+using AIChatBot.API.Interfaces.Services;
 using AIChatBot.API.Models;
 using Microsoft.AspNetCore.SignalR;
 using System.Text.Json;
@@ -8,28 +9,15 @@ namespace AIChatBot.API.Services
     public class AgentService
     {
         private readonly IHubContext<ChatHub> _hubContext;
+        private readonly IFileService _fileService;
 
-        public AgentService(IHubContext<ChatHub> hubContext)
+        public AgentService(IHubContext<ChatHub> hubContext, IFileService fileService)
         {
             _hubContext = hubContext;
+            _fileService = fileService;
         }
-        private readonly Dictionary<string, Func<JsonElement, string>> ToolMap = new()
-        {
-            ["CreateFile"] = args => ToolFunctions.CreateFile(
-                args.GetProperty("filename").GetString()!,
-                args.GetProperty("content").GetString()!
-            ),
-            ["FetchWebData"] = args => ToolFunctions.FetchWebData(
-                args.GetProperty("url").GetString()!
-            ),
-            ["SendEmail"] = args => ToolFunctions.SendEmail(
-                args.GetProperty("to").GetString()!,
-                args.GetProperty("subject").GetString()!,
-                args.GetProperty("body").GetString()!
-            )
-        };
 
-        public async Task<string> RunToolAsync(string aiResponse, string? connectionId = null)
+        public async Task<string> RunToolAsync(string aiResponse, Guid userId, int chatSessionId, string? connectionId = null)
         {
             // Broadcast thinking status
             if (!string.IsNullOrEmpty(connectionId))
@@ -76,9 +64,9 @@ namespace AIChatBot.API.Services
                     switch (tool)
                     {
                         case "CreateFile":
-                            var filename = parametersElement.GetProperty("filename").GetString();
-                            var content = parametersElement.GetProperty("content").GetString();
-                            result = ToolFunctions.CreateFile(filename, content);
+                            var filename = parametersElement.GetProperty("filename").GetString()!;
+                            var content = parametersElement.GetProperty("content").GetString()!;
+                            result = await _fileService.CreateFileAsync(filename, content, userId, chatSessionId);
                             break;
 
                         case "FetchWebData":
@@ -115,14 +103,14 @@ namespace AIChatBot.API.Services
             return "🤖 No matching tool found.";
         }
 
-        public async Task<string> RunAgentAsync(List<FunctionCallResult> functionCallResults, string? connectionId = null)
+        public async Task<string> RunAgentAsync(List<FunctionCallResult> functionCallResults, Guid userId, int chatSessionId, string? connectionId = null)
         {
             var result = "";
 
-            // Broadcast executing status
 
             foreach (var functionCall in functionCallResults)
             {
+                // Broadcast executing status
                 if (!string.IsNullOrEmpty(connectionId) && functionCallResults.Any())
                 {
                     await _hubContext.Clients.Client(connectionId).SendAsync("ReceiveStatus", $"🟢 Executing tool {functionCall.FunctionName}");
@@ -132,14 +120,31 @@ namespace AIChatBot.API.Services
                     try
                     {
                         var args = JsonDocument.Parse(functionCall.ArgumentsJson).RootElement;
-                        if (ToolMap.TryGetValue(functionCall.FunctionName, out var func))
+                        string toolResult;
+                        switch (functionCall.FunctionName)
                         {
-                            var toolResult = func(args);
-                            result += $"✅ Tool `{functionCall.FunctionName}` executed:\n{toolResult}\n";
-                        }
-                        else
-                        {
-                            result += $"❌ Unknown tool: {functionCall.FunctionName}\n";
+                            case "CreateFile":
+                                var filename = args.GetProperty("filename").GetString()!;
+                                var content = args.GetProperty("content").GetString()!;
+                                toolResult = await _fileService.CreateFileAsync(filename, content, userId, chatSessionId);
+                                result += $"✅ Tool `{functionCall.FunctionName}` executed:\n{toolResult}\n";
+                                break;
+                            case "FetchWebData":
+                                var url = args.GetProperty("url").GetString()!;
+                                toolResult = ToolFunctions.FetchWebData(url);
+                                result += $"✅ Tool `{functionCall.FunctionName}` executed:\n{toolResult}\n";
+                                break;
+                            case "SendEmail":
+                                var to = args.GetProperty("to").GetString()!;
+                                var subject = args.GetProperty("subject").GetString()!;
+                                var body = args.GetProperty("body").GetString()!;
+                                toolResult = ToolFunctions.SendEmail(to, subject, body);
+                                result += $"✅ Tool `{functionCall.FunctionName}` executed:\n{toolResult}\n";
+                                break;
+                            default:
+                                toolResult = $"❌ Unknown tool: {functionCall.FunctionName}";
+                                result += $"\n{toolResult}\n";
+                                break;
                         }
                     }
                     catch (Exception ex)

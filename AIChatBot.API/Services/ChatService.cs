@@ -67,7 +67,7 @@ namespace AIChatBot.API.Services
                 var prompt = preparePrompt(request.Message);
                 var service = _factory.GetService(selectedModel.ModelName);
                 var aiResponse = await service.SendMessageAsync(selectedModel.ModelName, prompt, request.ConnectionId);
-                responseText = await _agentService.RunToolAsync(aiResponse, request.ConnectionId);
+                responseText = await _agentService.RunToolAsync(aiResponse, request.UserId, sessionWithoutMessages.Id, request.ConnectionId);
             }
             else if (request.AIMode == "agent")
             {
@@ -78,14 +78,22 @@ namespace AIChatBot.API.Services
                     new() { ["role"] = "user", ["content"] = request.Message }
                 };
                 var response = await service.ChatWithFunctionSupportAsync(selectedModel.ModelName, msgObject, request.ConnectionId);
-                responseText = await _agentService.RunAgentAsync(response, request.ConnectionId);
+                responseText = await _agentService.RunAgentAsync(response, request.UserId, sessionWithoutMessages.Id, request.ConnectionId);
             }
             else if (request.AIMode == "planner")
             {
                 var service = _factory.GetService(selectedModel.ModelName);
                 var funcExecLog = new List<FunctionCallResult>();
-                for (int step = 0; step < 5; step++) // Limit recursion
+                var isDone = false;
+                var step = 0;
+                const int MaxIterations = 10; // Maximum allowed iterations to prevent infinite loops
+                do
                 {
+                    if (step >= MaxIterations)
+                    {
+                        Console.WriteLine("⚠️ Maximum iteration limit reached in planner mode.");
+                        break;
+                    }
                     var msgObject = preparePlannerPrompt(request, step, funcExecLog);
 
                     //Serialize the message object for logging
@@ -105,9 +113,10 @@ namespace AIChatBot.API.Services
                     Console.WriteLine(responseJson);
                     if (!response.Any(a => !string.IsNullOrWhiteSpace(a.FunctionName)))
                     {
+                        isDone = true;
                         break;
                     }
-                    var iterationResponse = await _agentService.RunAgentAsync(response, request.ConnectionId);
+                    var iterationResponse = await _agentService.RunAgentAsync(response, request.UserId, sessionWithoutMessages.Id, request.ConnectionId);
                     foreach (var funcCall in response.Where(a => !string.IsNullOrWhiteSpace(a.FunctionName)))
                     {
                         funcExecLog.Add(new FunctionCallResult()
@@ -131,13 +140,17 @@ namespace AIChatBot.API.Services
                     foreach (var msg in messages.Where(m => m.Role == "assistant"))
                     {
                         // Send the message to the client via SignalR
-                        _hubContext.Clients.Client(request.ConnectionId).SendAsync("ReceiveMessage", msg);
+                        if (!string.IsNullOrEmpty(request.ConnectionId))
+                        {
+                            await _hubContext.Clients.Client(request.ConnectionId).SendAsync("ReceiveMessage", msg);
+                        }
                     }
 
                     _chatHistoryService.SaveHistory(request.UserId, messages);
 
                     responseText += $"Recursion Step: {step} \n" + iterationResponse;
-                }
+                    step++;
+                } while (!isDone);
                 saveHistory = false; // Don't save history for planner mode
                 if (string.IsNullOrWhiteSpace(responseText))
                 {

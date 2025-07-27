@@ -31,9 +31,12 @@ builder.Services.Configure<OllamaModelsApi>(builder.Configuration.GetSection("Ol
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 builder.Services.Configure<ChatHistoryOptions>(builder.Configuration.GetSection("ChatHistoryOptions"));
 
+builder.Services.AddHttpContextAccessor();
+
 builder.Services.AddScoped<IChatHistoryDataContext, ChatHistoryDataContext>();
 builder.Services.AddScoped<IChatSessionDataContext, ChatSessionDataContext>();
 builder.Services.AddScoped<IUserDataContext, UserDataContext>();
+builder.Services.AddScoped<IAgentFileDataContext, AgentFileDataContext>();
 
 builder.Services.AddScoped<ChatModelServiceFactory>();
 builder.Services.AddScoped<IUserService, UserService>();
@@ -41,6 +44,8 @@ builder.Services.AddScoped<IModelService, ModelService>();
 builder.Services.AddScoped<IChatSessionServices, ChatSessionServices>();
 builder.Services.AddScoped<IChatHistoryService, ChatHistoryService>();
 builder.Services.AddScoped<IChatService, ChatService>();
+builder.Services.AddScoped<IFileService, FileService>();
+
 builder.Services.AddSingleton<MailService>();
 builder.Services.AddHttpClient<OllamaChatService>();
 builder.Services.AddHttpClient<OpenRouterChatService>();
