@@ -157,12 +157,11 @@ export OPENROUTER_API_KEY=your_key_here  # For cloud AI models
 
 ## Known Issues and Limitations
 
-1. **README Version Mismatch**: Project uses .NET 8, README mentions .NET 9
-2. **Test Configuration**: Angular tests fail due to Zone.js setup (12/13 tests fail)
-3. **Build Warnings**: .NET build produces 66 nullability warnings (non-blocking)
-4. **No Linting**: Angular lint not configured by default
-5. **Database Dependencies**: Uses SQL Server with Entity Framework migrations
-6. **Local Models**: Requires Ollama setup for local AI model support
+1. **Test Configuration**: Angular tests fail due to Zone.js setup (12/13 tests fail)
+2. **Build Warnings**: .NET build produces 66 nullability warnings (non-blocking)
+3. **No Linting**: Angular lint not configured by default
+$. **Database Dependencies**: Uses SQL Server with Entity Framework migrations
+5. **Local Models**: Requires Ollama setup for local AI model support
 
 ## AI Tools Integration
 
