@@ -45,7 +45,7 @@
 }
 
 .document-content {
-    max-height: 378px;
+    max-height: calc(100vh - 405px);
     overflow-y: auto;
     overflow-x: hidden;
     padding: 8px;

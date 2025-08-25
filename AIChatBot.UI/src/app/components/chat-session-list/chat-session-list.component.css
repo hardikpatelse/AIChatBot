@@ -31,6 +31,6 @@
 }
 
 .session-list {
-    max-height: 200px;
+    max-height: calc(100vh - 570px);
     overflow-y: auto;
 }
