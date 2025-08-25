@@ -9,7 +9,7 @@
 }
 
 .list-group-item {
-    font-size: 1.05em;
+    /* font-size: 1.05em; */
     cursor: pointer;
     transition: background 0.2s;
 }
@@ -28,4 +28,9 @@
     border-color: #0d6efd;
     color: #004085;
     font-weight: 600;
+}
+
+.session-list {
+    max-height: 200px;
+    overflow-y: auto;
 }

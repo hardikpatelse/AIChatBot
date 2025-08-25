@@ -5,7 +5,7 @@
 .upload-area {
   border: 2px dashed #dee2e6;
   border-radius: 8px;
-  padding: 2rem;
+  padding: 1rem;
   text-align: center;
   transition: all 0.3s ease;
   background-color: #f8f9fa;
@@ -67,9 +67,16 @@
 .file-info {
   display: flex;
   align-items: center;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
 }
 
 .file-info i {
   color: #6c757d;
+}
+
+.file-icon,
+.trash-icon {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
 }

@@ -1,5 +1,5 @@
 .chat-history {
-    height: calc(100vh - 230px);
+    height: calc(100vh - 315px);
     flex-grow: 1;
     padding: 10px;
     overflow-y: auto;

@@ -1,1 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
+
+.section-header {
+    font-size: 0.875rem;
+    font-weight: 600;
+}
