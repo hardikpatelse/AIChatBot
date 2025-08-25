@@ -7,6 +7,12 @@
             <app-chat-mode-selector (modeSelected)="onModeSelected($event)" [selectedMode]="selectedChatMode"
                 [supportedModes]="chatModes || []"></app-chat-mode-selector>
             <app-model-selector (modelSelected)="onModelChange($event)"></app-model-selector>
+            
+            <!-- Document Upload for RAG mode -->
+            <app-document-upload *ngIf="selectedChatMode === 'rag' && userId" 
+                                 [userId]="userId"
+                                 class="mt-3">
+            </app-document-upload>
         </div>
         <!-- <app-model-details *ngIf="selectedModelDetails" [model]="selectedModelDetails"></app-model-details> -->
         <app-chat-session-list class="w-100" *ngIf="userObj?.chatSessions" [sessions]="userObj.chatSessions"

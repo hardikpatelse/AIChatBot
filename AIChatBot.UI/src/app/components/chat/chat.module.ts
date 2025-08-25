@@ -12,6 +12,7 @@ import { UserFormModule } from '../user-form/user-form.module'
 import { HeaderModule } from '../header/header.module'
 import { ChatSessionListModule } from '../chat-session-list/chat-session-list.module'
 import { NewChatSessionModule } from '../new-chat-session/new-chat-session.module'
+import { DocumentUploadModule } from '../document-upload/document-upload.module'
 
 const routes: Routes = [
     { path: '', component: Chat }
@@ -33,7 +34,8 @@ const routes: Routes = [
         UserFormModule,
         HeaderModule,
         ChatSessionListModule,
-        NewChatSessionModule
+        NewChatSessionModule,
+        DocumentUploadModule
     ]
 })
 export class ChatModule { }
