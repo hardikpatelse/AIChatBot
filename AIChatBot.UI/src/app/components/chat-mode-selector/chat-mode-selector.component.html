@@ -1,6 +1,7 @@
 <div class="chat-mode-selector">
-    <div class="mb-2 fw-semibold">How would you like the AI to assist you today?</div>
-    <select class="form-select" [ngModel]="selectedMode" (ngModelChange)="selectMode($event)">
+    <label for="chat-mode" class="block mb-1 text-sm font-small">How would you like the AI to assist you
+        today?</label>
+    <select id="chat-mode" class="form-select" [ngModel]="selectedMode" (ngModelChange)="selectMode($event)">
         <option *ngFor="let option of supportedModes" [value]="option.chatMode.mode">
             {{ option.chatMode.name }}
         </option>

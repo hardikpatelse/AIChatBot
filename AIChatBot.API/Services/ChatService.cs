@@ -18,6 +18,7 @@ namespace AIChatBot.API.Services
         private readonly IChatSessionServices _chatSessionServices;
         private readonly IModelService _modelService;
         private readonly IHubContext<ChatHub> _hubContext;
+        private readonly RagChatService _ragChatService;
 
         public ChatService(
             IChatHistoryService chatHistoryService,
@@ -25,7 +26,8 @@ namespace AIChatBot.API.Services
             AgentService agentService,
             IChatSessionServices chatSessionServices,
             IModelService modelService,
-            IHubContext<ChatHub> hubContext)
+            IHubContext<ChatHub> hubContext,
+            RagChatService ragChatService)
         {
             _chatHistoryService = chatHistoryService;
             _factory = factory;
@@ -33,6 +35,7 @@ namespace AIChatBot.API.Services
             _chatSessionServices = chatSessionServices;
             _modelService = modelService;
             _hubContext = hubContext;
+            _ragChatService = ragChatService;
         }
 
         public IActionResult GetHistory(Guid userId, Guid chatSessionIdentity)
@@ -156,6 +159,15 @@ namespace AIChatBot.API.Services
                 {
                     responseText = "⚠️ Agent loop ended without clear conclusion.";
                 }
+            }
+            else if (request.AIMode == "rag")
+            {
+                responseText = await _ragChatService.GenerateRagResponseAsync(
+                    request.UserId.ToString(),
+                    request.Message,
+                    selectedModel.ModelName,
+                    request.ChatSessionIdentity,
+                    request.ConnectionId);
             }
             else
             {

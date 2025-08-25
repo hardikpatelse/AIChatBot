@@ -125,7 +125,7 @@ export class Chat implements OnInit, OnDestroy {
 
     this.chatService.sendMessage(this.userId, this.chatSessionIdentity, this.selectedModelId, msg, this.selectedChatMode, this.connectionId || undefined).subscribe({
       next: res => {
-        if (res.showInChat) {
+        if (res.showInHistory) {
           this.chatHistory.push({
             role: 'assistant', content: res.response, timeStamp: new Date().toISOString(),
             id: 0,

@@ -1,31 +1,70 @@
 <app-header [userName]="userName"></app-header>
 
-<div class="chat-layout d-flex">
-    <!-- Side Panel -->
-    <aside class="side-panel bg-light border-end p-3 d-flex flex-column align-items-center">
-        <div class="side-panel-header w-100 mb-3">
-            <app-chat-mode-selector (modeSelected)="onModeSelected($event)" [selectedMode]="selectedChatMode"
-                [supportedModes]="chatModes || []"></app-chat-mode-selector>
-            <app-model-selector (modelSelected)="onModelChange($event)"></app-model-selector>
+<div class="chat-layout d-flex vh-100">
+    <!-- Compact Side Panel -->
+    <aside class="side-panel bg-light border-end d-flex flex-column"
+        style="width: 280px; min-width: 280px; max-height: calc(100vh - 65px); overflow: hidden;">
+
+        <!-- Scrollable Sessions Section -->
+        @if (userObj && userObj.chatSessions && userObj.chatSessions.length > 0) {
+        <div class="sessions-section d-flex flex-column" style="min-height: 0;">
+            <!-- <div class="sessions-header p-2 border-bottom bg-white">
+                <h6 class="mb-0" style="font-size: 0.875rem; font-weight: 600;">Chat Sessions</h6>
+            </div> -->
+            <div class="sessions-list" style="overflow-y: auto; overflow-x: hidden;">
+                <app-chat-session-list class="w-100" [sessions]="userObj.chatSessions"
+                    [selectedSession]="selectedSession" (sessionSelected)="onSessionSelected($event)"
+                    (newChat)="onNewChat($event)"></app-chat-session-list>
+            </div>
         </div>
-        <!-- <app-model-details *ngIf="selectedModelDetails" [model]="selectedModelDetails"></app-model-details> -->
-        <app-chat-session-list class="w-100" *ngIf="userObj?.chatSessions" [sessions]="userObj.chatSessions"
-            [selectedSession]="selectedSession" (sessionSelected)="onSessionSelected($event)"
-            (newChat)="onNewChat($event)"></app-chat-session-list>
+        }
+
+        <!-- Document Upload Section -->
+        @if (selectedChatMode === 'rag' && userId) {
+        <div class="document-section border-bottom bg-white">
+            <div class="section-header p-2 border-bottom bg-light">
+                <h6 class="mb-0 section-header">
+                    <i class="fas fa-file-upload me-2"></i>Documents for RAG
+                </h6>
+            </div>
+            <div class="document-content">
+                <app-document-upload [userId]="userId" class="compact-upload"></app-document-upload>
+            </div>
+        </div>
+        }
+
+
     </aside>
 
     <!-- Main Chat Area -->
-    <div class="chat-container flex-grow-1 d-flex flex-column p-4" *ngIf="chatHistory">
+    @if (chatHistory) {
+    <div class="chat-container flex-grow-1 d-flex flex-column p-4">
         <app-chat-history [chatHistory]="chatHistory" [isLoading]="isLoading" [errorMessage]="errorMessage"
             [parseMarkdown]="parseMarkdown" [statusMessages]="statusMessages"></app-chat-history>
+
+        <!-- Controls above text area - aligned side by side -->
+        <div
+            class="controls-above-input d-flex justify-content-start align-items-center p-2 border-bottom bg-light mb-2">
+            <div class="flex-grow-3 me-4">
+                <app-chat-mode-selector (modeSelected)="onModeSelected($event)" [selectedMode]="selectedChatMode"
+                    [supportedModes]="chatModes || []"></app-chat-mode-selector>
+            </div>
+            <div class="flex-grow-3 ms-4">
+                <app-model-selector (modelSelected)="onModelChange($event)"></app-model-selector>
+            </div>
+        </div>
+
         <form class="input-bar d-flex align-items-center bg-light p-2 rounded border" (ngSubmit)="sendMessage()">
             <textarea class="form-control me-2" [(ngModel)]="userMessage" name="userMessage" [disabled]="isLoading"
                 rows="3" style="resize: none; min-height: 3em; max-height: 8em;" (keydown.enter)="sendMessage()"
                 placeholder="Type your message..." autocomplete="off"></textarea>
             <button class="btn btn-primary" type="submit" [disabled]="isLoading || !userMessage.trim()">Send</button>
         </form>
-        <div *ngIf="errorMessage" class="error text-danger text-center mt-2">{{ errorMessage }}</div>
+        @if (errorMessage) {
+        <div class="error text-danger text-center mt-2">{{ errorMessage }}</div>
+        }
     </div>
+    }
 </div>
 
 <ng-template #userFormModal>
@@ -59,9 +98,9 @@
     </div>
 </ng-template>
 
-<ng-container *ngIf="!userId">
-    <ng-container *ngTemplateOutlet="userFormModal"></ng-container>
-</ng-container>
-<ng-container *ngIf="showNewChatModal">
-    <ng-container *ngTemplateOutlet="newChatSessionModal"></ng-container>
-</ng-container>
+@if (!userId) {
+<ng-container *ngTemplateOutlet="userFormModal"></ng-container>
+}
+@if (showNewChatModal) {
+<ng-container *ngTemplateOutlet="newChatSessionModal"></ng-container>
+}

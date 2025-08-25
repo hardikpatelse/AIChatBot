@@ -1,5 +1,5 @@
 .chat-history {
-    height: calc(100vh - 230px);
+    height: calc(100vh - 315px);
     flex-grow: 1;
     padding: 10px;
     overflow-y: auto;
@@ -60,4 +60,24 @@
     color: #888;
     margin-top: 2px;
     letter-spacing: 0.01em;
+}
+
+/* RAG-specific styling */
+.message-content:has(*[class*="source"]) .assistant .message,
+.assistant .message:has(*[class*="source"]) {
+    border-left: 4px solid #17a2b8;
+    background-color: #e8f4f8;
+}
+
+.message-content em:contains("Sources:") {
+    display: inline-block;
+    background-color: #d1ecf1;
+    color: #0c5460;
+    font-size: 0.85em;
+    padding: 4px 8px;
+    border-radius: 4px;
+    margin-top: 8px;
+    border: 1px solid #bee5eb;
+    font-style: normal;
+    font-weight: 500;
 }
