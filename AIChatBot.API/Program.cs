@@ -45,6 +45,8 @@ builder.Services.AddScoped<IChatSessionServices, ChatSessionServices>();
 builder.Services.AddScoped<IChatHistoryService, ChatHistoryService>();
 builder.Services.AddScoped<IChatService, ChatService>();
 builder.Services.AddScoped<IFileService, FileService>();
+builder.Services.AddSingleton<IRagStore, InMemoryRagStore>();
+builder.Services.AddScoped<RagChatService>();
 
 builder.Services.AddSingleton<MailService>();
 builder.Services.AddHttpClient<OllamaChatService>();
