@@ -1,6 +1,6 @@
 # 🤖 AIChatBot
 
-AIChatBot is a local and online AI-powered chatbot built using open-source language models. This project supports both locally hosted models (via [Ollama](https://ollama.com)) and cloud-based models via [OpenRouter](https://openrouter.ai). It demonstrates the integration of AI with a .NET 9 API and Angular 20 frontend.
+AIChatBot is a local and online AI-powered chatbot built using open-source language models. This project supports both locally hosted models (via [Ollama](https://ollama.com)) and cloud-based models via [OpenRouter](https://openrouter.ai). It demonstrates the integration of AI with a .NET 8 API and Angular 20 frontend.
 
 ---
 
@@ -18,7 +18,7 @@ To run this project locally, ensure the following:
 
 - Windows 10/11 with WSL support
 - Installed Ubuntu 20.04.6 LTS (via Microsoft Store)
-- [.NET 9 SDK](https://dotnet.microsoft.com/en-us/download)
+- [.NET 8 SDK](https://dotnet.microsoft.com/en-us/download)
 - [Node.js (v20+)](https://nodejs.org/)
 - [Angular CLI](https://angular.io/cli) (`npm install -g @angular/cli`)
 - [Ollama](https://ollama.com/download) installed in Ubuntu for running local AI models
@@ -105,7 +105,7 @@ API requests are routed via OpenRouter using this key, supporting seamless AI ch
 
 ## 🤖 AIChatBot Integration
 
-### 🔧 Backend (API - .NET 9)
+### 🔧 Backend (API - .NET 8)
 
 1. Navigate to `AIChatBot.API/`
 2. Run the following commands:
@@ -154,7 +154,7 @@ ng serve
 ```
 AIChatBot/
 │
-├── AIChatBot.API/        # .NET 9 API for chatbot
+├── AIChatBot.API/        # .NET 8 API for chatbot
 ├── AIChatBot.UI/         # Angular 20 UI frontend
 └── README.md             # Project documentation
 ```
@@ -194,7 +194,7 @@ You can toggle between AI modes via the UI:
 ## 🚀 Get Started
 
 1. Choose your preferred model type (local or online).
-2. Start the backend using `.NET 9`
+2. Start the backend using `.NET 8`
 3. Start the frontend using Angular CLI
 4. Interact with AIChatBot at `http://localhost:4200/`
 
