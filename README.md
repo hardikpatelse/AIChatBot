@@ -17,6 +17,19 @@ Transform your chatbot experience with **Knowledge-Based AI**! Upload your docum
 
 Experience AI that truly understands YOUR content!
 
+### 🔥 Firestore Database Connector
+Seamlessly integrate with Google Cloud Firestore for scalable data storage! The new Firestore connector provides a complete alternative to Entity Framework Core.
+
+**Key Features:**
+- 🚀 **Complete CRUD Operations**: Full support for all data entities
+- 🔄 **Interface Abstraction**: Drop-in replacement for Entity Framework implementations
+- 📄 **Entity Mapping**: Automatic conversion between EF Core entities and Firestore documents  
+- ⚙️ **Flexible Configuration**: Support for production, emulator, and local development
+- 🛡️ **Error Handling**: Comprehensive logging and exception handling
+- ✅ **Unit Tested**: Full test coverage for all components
+
+Switch between SQL Server and Firestore with a simple configuration change!
+
 ---
 
 ## 🎬 Demo Video

@@ -1,13 +1,16 @@
 using AIChatBot.API.AIServices;
 using AIChatBot.API.Data;
 using AIChatBot.API.DataContext;
+using AIChatBot.API.DataContext.Firestore;
 using AIChatBot.API.Factory;
 using AIChatBot.API.Hubs;
 using AIChatBot.API.Interfaces.DataContext;
 using AIChatBot.API.Interfaces.Services;
 using AIChatBot.API.Models;
+using AIChatBot.API.Models.Base;
 using AIChatBot.API.Models.Custom;
 using AIChatBot.API.Services;
+using Google.Cloud.Firestore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models; // Ensure this directive is present for Swagger support  
 
@@ -30,13 +33,29 @@ builder.Services.Configure<OpenRouterModelsApi>(builder.Configuration.GetSection
 builder.Services.Configure<OllamaModelsApi>(builder.Configuration.GetSection("OllamaModelsApi"));
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 builder.Services.Configure<ChatHistoryOptions>(builder.Configuration.GetSection("ChatHistoryOptions"));
+builder.Services.Configure<FirestoreSettings>(builder.Configuration.GetSection("FirestoreSettings"));
 
 builder.Services.AddHttpContextAccessor();
 
+// Configure Entity Framework (default implementation)
 builder.Services.AddScoped<IChatHistoryDataContext, ChatHistoryDataContext>();
 builder.Services.AddScoped<IChatSessionDataContext, ChatSessionDataContext>();
 builder.Services.AddScoped<IUserDataContext, UserDataContext>();
 builder.Services.AddScoped<IAgentFileDataContext, AgentFileDataContext>();
+
+// Configure Firestore factory and database
+builder.Services.AddSingleton<FirestoreFactory>();
+builder.Services.AddSingleton(provider =>
+{
+    var factory = provider.GetRequiredService<FirestoreFactory>();
+    return factory.CreateFirestoreDb();
+});
+
+// Configure Firestore implementations (can be swapped via configuration)
+// builder.Services.AddScoped<IChatHistoryDataContext, ChatHistoryFirestoreDataContext>();
+// builder.Services.AddScoped<IChatSessionDataContext, ChatSessionFirestoreDataContext>();
+// builder.Services.AddScoped<IUserDataContext, UserFirestoreDataContext>();
+// builder.Services.AddScoped<IAgentFileDataContext, AgentFileFirestoreDataContext>();
 
 builder.Services.AddScoped<ChatModelServiceFactory>();
 builder.Services.AddScoped<IUserService, UserService>();

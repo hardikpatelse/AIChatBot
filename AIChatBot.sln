@@ -5,6 +5,8 @@ VisualStudioVersion = 17.14.36212.18
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AIChatBot.API", "AIChatBot.API\AIChatBot.API.csproj", "{A4D43597-C0E2-476D-A18F-0EB0DC7C3A83}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AIChatBot.Tests", "AIChatBot.Tests\AIChatBot.Tests.csproj", "{CCC47AD8-802D-4F47-9ABC-17B7CD7EC80A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{A4D43597-C0E2-476D-A18F-0EB0DC7C3A83}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A4D43597-C0E2-476D-A18F-0EB0DC7C3A83}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A4D43597-C0E2-476D-A18F-0EB0DC7C3A83}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CCC47AD8-802D-4F47-9ABC-17B7CD7EC80A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CCC47AD8-802D-4F47-9ABC-17B7CD7EC80A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CCC47AD8-802D-4F47-9ABC-17B7CD7EC80A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CCC47AD8-802D-4F47-9ABC-17B7CD7EC80A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
